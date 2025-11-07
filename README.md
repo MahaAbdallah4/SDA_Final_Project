@@ -375,4 +375,8 @@ You can:
 - Learn POM design pattern
 - Understand fluent interfaces
 - Execute tests with various configurations
+<<<<<<< HEAD
 - Generate professional reports
+=======
+- Generate professional reports
+>>>>>>> 632289faf7a2a06f25c45fd6b186bb8a3219ecb4
