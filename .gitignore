@@ -59,8 +59,8 @@ jenkins.log
 
 # Configuration files with sensitive data (if you have environment-specific configs)
 # Uncomment if needed:
-# src/test/resources/config.properties
-# src/test/resources/credentials.properties
+ src/test/resources/config.properties
+ src/test/resources/credentials.properties
 
 # Keep this commented unless you want to ignore the main config
 # configurations.properties should be tracked in git for test data
