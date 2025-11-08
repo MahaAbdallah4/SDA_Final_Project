@@ -1,7 +1,10 @@
 package com.bazaarstores.pages;
 
+import com.bazaarstores.utilities.Driver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 
 public class DashboardPage extends BasePage {
 
@@ -14,6 +17,17 @@ public class DashboardPage extends BasePage {
     private final By productsLink = By.cssSelector("a[href*='products'], button:contains('Products')");
     private final By logoutButton = By.cssSelector("button:contains('Logout'), a:contains('Logout')");
     private final By userName = By.cssSelector(".user-name, [class*='username']");
+
+    private final By addStoreButton = By.cssSelector("button.btn.btn-outline-primary.no-hover.float-start.float-lg-end");
+    private final By storeNameInput = By.id("first-name-column");
+    private final By iframeLocator = By.id("default_ifr"); // ID of the TinyMCE iframe
+    private final By editorBody = By.id("tinymce");
+    private final By storeLocationInput = By.id("location-id-column");
+    private final By storeAdminsInput = By.id("admin-column");
+    private final By submitButton = By.cssSelector("button[type='submit']"); // Adjust based on actual submit button selector
+    private final By successMessage = By.className("toast-message");// Adjust based on actual success message ID
+    private final By errorMessage = By.xpath("//ul/li[contains(text(), 'The name field is required.') or contains(text(), 'The location field is required.')]");
+    private final By storesLink = By.cssSelector("a.sidebar-link[href='https://bazaarstores.com/stores']");
 
 
     // Navigation Methods
@@ -66,4 +80,47 @@ public class DashboardPage extends BasePage {
     public boolean isProfileVisitChartDisplayed() {
         return isDisplayed(profileVisitChart);
     }
+
+    public void navigateToAddStore() {
+        waitForElementToBeClickable(addStoreButton);
+        click(addStoreButton);
+    }
+
+    public void submitStoreForm() {
+        click(submitButton);
+    }
+
+    public boolean isStoreAddedSuccessfully() {
+        return isDisplayed(successMessage);
+    }
+
+    public boolean isNotStoreAddedSuccessfully() {
+        return isDisplayed(errorMessage);
+    }
+
+    public void navigateToStores() {
+        click(storesLink);
+    }
+
+    public void enterStoreName(String name) {
+        sendKeys(storeNameInput, name);
+    }
+
+    public void enterStoreDescriptionWithClick(String description) {
+        Driver.getDriver().switchTo().frame(Driver.getDriver().findElement(iframeLocator));
+        Driver.getDriver().findElement(editorBody).click();
+        Driver.getDriver().findElement(editorBody).sendKeys(description);
+        Driver.getDriver().switchTo().defaultContent();
+    }
+
+    public void enterStoreLocation(String location) {
+        sendKeys(storeLocationInput, location);
+    }
+
+    public void enterStoreAdmins(String admins) {
+        wait.until(ExpectedConditions.elementToBeClickable(storeAdminsInput));
+        Select adminSelect = new Select(Driver.getDriver().findElement(storeAdminsInput));
+        adminSelect.selectByVisibleText(admins);
+    }
+
 }
