@@ -196,6 +196,14 @@ public abstract class BasePage {
         List<String> windows = Driver.getDriver().getWindowHandles().stream().toList();
         Driver.getDriver().switchTo().window(windows.get(windowIndex));
     }
+    // Type Methods
+    public void clearAndType(By locator, String text) {
+        waitForElementToBeVisible(locator);
+        WebElement element = findElement(locator);
+        element.clear();
+        element.sendKeys(text);
+    }
+
 
     public void switchToFrame(By frameLocator) {
         Driver.getDriver().switchTo().frame(findElement(frameLocator));
@@ -226,4 +234,5 @@ public abstract class BasePage {
     public byte[] takeScreenshot() {
         return ((TakesScreenshot) Driver.getDriver()).getScreenshotAs(OutputType.BYTES);
     }
+
 }
