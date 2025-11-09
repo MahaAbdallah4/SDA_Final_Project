@@ -144,7 +144,7 @@ public class UsersSteps {
 
     @Then("user {string} should show:")
     public void user_should_show(String email, DataTable dataTable) {
-        Driver.getDriver().navigate().refresh();   // ✅ لتحديث الصفحة بعد الحفظ
+        Driver.getDriver().navigate().refresh();      
 
         List<String> values = dataTable.asList(String.class);
         String expectedRole = values.get(1);
