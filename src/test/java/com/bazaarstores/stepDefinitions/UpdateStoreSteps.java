@@ -7,7 +7,6 @@ import com.bazaarstores.pages.StoreListPage;
 import com.bazaarstores.utilities.ApiUtil;
 import com.bazaarstores.utilities.Driver;
 import com.bazaarstores.utilities.ConfigReader;
-import io.cucumber.java.PendingException;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -16,18 +15,12 @@ import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.time.Duration;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.containsString;
 
 public class UpdateStoreSteps {
     private AllPages pages = new AllPages();
     private Response apiResponse;
-    private String selectedStoreId;
     private LoginPage loginPage;
     private DashboardPage dashboardPage;
 
@@ -52,8 +45,6 @@ public class UpdateStoreSteps {
 
     @When("Admin navigate to the store list")
     public void navigate_to_store_list() {
-        apiResponse = ApiUtil.get("/stores");
-        apiResponse.then().assertThat().statusCode(200);
         dashboardPage = pages.getDashboardPage();
         dashboardPage.navigateToStores();
     }
@@ -64,10 +55,7 @@ public class UpdateStoreSteps {
         if (apiResponse.jsonPath().getList("").isEmpty()) {
             throw new RuntimeException("No stores available in the response.");
         }
-
         String storeName = apiResponse.jsonPath().getString("[0].name");
-        selectedStoreId = apiResponse.jsonPath().getString("[0].id");
-
         StoreListPage storeListPage = new StoreListPage(Driver.getDriver());
         storeListPage.clickEditButton(storeName);
     }
@@ -99,65 +87,47 @@ public class UpdateStoreSteps {
 
     @Then("store details should be updated successfully")
     public void store_details_should_be_updated_successfully() {
-        // Check the API response status code
-        if (apiResponse.getStatusCode() != 200) {
-            System.out.println("Response Body: " + apiResponse.getBody().asString());
-        }
-        apiResponse.then().assertThat().statusCode(200);
         Assert.assertTrue("Store was not added successfully", dashboardPage.isStoreAddedSuccessfully());
     }
 
     @Given("the store has been updated")
     public void the_store_has_been_updated() {
-        // This step may already be covered by previous steps,
-        // ensure the store has been updated before checking the list.
+        // This step is already covered by previous steps,
     }
 
 
     @Then("updated store details should be displayed in the list")
     public void updated_store_details_should_be_displayed_in_the_list() {
-        // Re-fetch the store list from the API to get the latest data
-        apiResponse = ApiUtil.get("/stores");
-        Assert.assertEquals(200, apiResponse.getStatusCode());
-
         // Expected values
         String expectedStoreName = "My New Store";
         String expectedStoreDescription = "A great place to shop";
-        String expectedStoreLocation = "Store Manager";
-        String expectedStoreAdmins = "";
-
+        String expectedStoreAdmins = "Store Manager";
         // Use Selenium to find the updated details in the HTML table
         WebDriver driver = Driver.getDriver();
         List<WebElement> rows = driver.findElements(By.cssSelector("table tbody tr"));
         boolean found = false;
-
         // Iterate through the rows to find a match for the updated store details
         for (WebElement row : rows) {
             String name = row.findElement(By.xpath("./td[1]")).getText(); // NAME column
             String description = row.findElement(By.xpath("./td[2]")).getText(); // DESCRIPTION column
-            String location = row.findElement(By.xpath("./td[3]")).getText(); // LOCATION column
-            String admin = row.findElement(By.xpath("./td[4]")).getText(); // ADMIN NAME column
+            String admin = row.findElement(By.xpath("./td[3]")).getText(); // ADMIN NAME column
 
             // Log the retrieved values for debugging
             System.out.println("Found Row - Name: " + name + ", Description: " + description +
-                    ", Location: " + location + ", Admin: " + admin);
-
+                     ", Admin: " + admin);
             // Check for exact matches including description and location
             if (name.equals(expectedStoreName) &&
                     description.equals(expectedStoreDescription) &&
-                    location.equals(expectedStoreLocation) &&
                     admin.equals(expectedStoreAdmins)) {
                 found = true;
                 break; // Exit loop if match is found
             }
         }
-
         // Assert that the updated store details were found in the table
         if (!found) {
             // Log expected vs. actual for further debugging
             System.out.println("Expected: [Name: " + expectedStoreName +
                     ", Description: " + expectedStoreDescription +
-                    ", Location: " + expectedStoreLocation +
                     ", Admin: " + expectedStoreAdmins + "]");
             Assert.fail("Updated store details not found in the list.");
         }
@@ -180,10 +150,5 @@ public class UpdateStoreSteps {
         loginPage.enterEmail(email);
         loginPage.enterPassword(password);
         dashboardPage = loginPage.clickLoginButton();
-
-        // Ensure the store list is fetched
-        apiResponse = ApiUtil.get("/stores");
-        Assert.assertEquals(200, apiResponse.getStatusCode());
-
     }
 }

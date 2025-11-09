@@ -4,7 +4,7 @@ Feature: Add Store
   So that I can manage the stores in the system
 
  #TC_US19_001- Validate new store addition with valid inputs
-  @Positive @AdminAddStore
+  @US19 @Positive @AdminAddStore
   Scenario: Admin adds a new store
     Given Admin is logged in
     When I navigate to the Store page
@@ -17,7 +17,7 @@ Feature: Add Store
     Then store should be added successfully
 
 #TC_US19_002- Validate error for missing fields
-  @Negative @AdminAddMissingFieldsStore
+  @US19 @Negative @AdminAddMissingFieldsStore
   Scenario: Admin adds a new store
     Given Admin is logged in
     When I navigate to the Store page
@@ -30,15 +30,15 @@ Feature: Add Store
     Then an error message appears for missing required fields
 
 #TC_US19_003- Validate the added store via API
-  @Positive @AdminCheckStoreExistence
+  @US19 @Positive @AdminCheckStoreExistence
   Scenario: TC_US19_003 Validate the existence of a store via API
     Given Admin is logged in
     When I navigate to the Store page
     And I call the API to retrieve the store list
     Then the store "My New Store" should appear in the API response
 
-#TC_US19_004- Validate duplicate store name
-  @Negative @AdminAddDuplicateStore
+#TC_US19_004- Validate duplicate store name (Bug)
+  @US19 @Negative @AdminAddDuplicateStore
   Scenario: TC_US19_004 Validate duplicate store name
     Given Admin is logged in
     When I navigate to the Store page

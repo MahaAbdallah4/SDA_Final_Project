@@ -4,7 +4,7 @@ Feature: Update Store Details
   So that I can ensure that the information is current and accurate.
 
   #TC_US20_001 – Validate updating store details with valid inputs
-  @positive @AdminEditStore
+  @US20 @Positive @AdminEditStore
   Scenario: TC_US20_001 Validate updating store details with valid inputs
     Given Admin is logged in and store exists
     When Admin navigate to the store list
@@ -17,14 +17,14 @@ Feature: Update Store Details
     Then store details should be updated successfully
 
   #TC_US20_002 – Validate changes reflect in the store list
-  @positive @AdminConfirmEditStore
+  @US20 @Positive @AdminConfirmEditStore
   Scenario: TC_US20_002 Validate changes reflect in the store list
     Given Admin is logged in and store and store has been updated
     When Admin navigate to the store list
     Then updated store details should be displayed in the list
 
   #TC_US20_003 – Validate error for invalid inputs
-  @negative @AdminInvalidEditStore
+  @US20 @Negative @AdminInvalidEditStore
   Scenario: TC_US20_003 Validate error for invalid inputs
     Given Admin is logged in and store exists
     When Admin navigate to the store list
