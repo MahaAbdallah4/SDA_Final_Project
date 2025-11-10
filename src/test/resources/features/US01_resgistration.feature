@@ -64,4 +64,4 @@ Feature: Registration Feature
     And user enters confirm password for sign up "Pass1"
     And user clicks the sing up button
     Then user should see: The password field must be at least 6 characters. error message
-    And assert the registration via API
+    And assert the negative registration via API using email "faker"
