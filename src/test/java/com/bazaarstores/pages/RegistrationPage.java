@@ -14,6 +14,8 @@ public class RegistrationPage extends BasePage {
     private final By password_confirmation = By.name("password_confirmation");
     private final By signUp = By.xpath("//button[.='Sign Up']");
     private final By invalidEmailMessage = By.xpath("//li[.='The email field must be a valid email address.']");
+    private final By nameFieldRequiredMessage = By.xpath("//li[.='The name field is required.']");
+
 
     public RegistrationPage enterEmail(String email) {
         Driver.getDriver().findElement(this.email).sendKeys(email);
@@ -44,6 +46,14 @@ public class RegistrationPage extends BasePage {
         assertEquals(
                 "The email field must be a valid email address.",
                 Driver.getDriver().findElement(invalidEmailMessage).getText()
+        );
+        return this;
+    }
+
+    public RegistrationPage validateNameFieldRequired() {
+        assertEquals(
+                "The name field is required.",
+                Driver.getDriver().findElement(nameFieldRequiredMessage).getText()
         );
         return this;
     }

@@ -61,4 +61,9 @@ public class RegistrationSteps {
     public void userShouldSeeInvalidEmailErrorMessage() {
         pages.getRegistrationPage().validateInvalidEmail();
     }
+
+    @Then("User should see: The name field is required. error message")
+    public void userShouldSeeTheNameFieldIsRequiredErrorMessage() {
+        pages.getRegistrationPage().validateNameFieldRequired();
+    }
 }
