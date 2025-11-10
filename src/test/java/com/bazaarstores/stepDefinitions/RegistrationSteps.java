@@ -66,4 +66,10 @@ public class RegistrationSteps {
     public void userShouldSeeTheNameFieldIsRequiredErrorMessage() {
         pages.getRegistrationPage().validateNameFieldRequired();
     }
+
+    @Then("user should see: invalid name message error")
+    public void userShouldSeeInvalidNameMessageError() {
+        //This is a bug!, there is no validation for invalid name, should not accept invalid name
+        assert false;
+    }
 }

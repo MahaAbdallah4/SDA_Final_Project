@@ -39,3 +39,16 @@ Feature: Registration Feature
     And user clicks the sing up button
     Then user should see invalid email error message
     And assert the negative registration via API using email "invalid_email.com"
+
+    #TC004
+  @TC04_NegativeRegistration
+  Scenario: Verify validation for invalid name characters
+    Given user goes to homepage
+    When user clicks registration link
+    And user enters email for sign up "faker"
+    And user enters full name for sign up "J@*hn"
+    And user enters password for sign up
+    And user enters confirm password for sign up
+    And user clicks the sing up button
+    Then user should see: invalid name message error
+    And assert the negative registration invalid name via API using name "J@*hn"

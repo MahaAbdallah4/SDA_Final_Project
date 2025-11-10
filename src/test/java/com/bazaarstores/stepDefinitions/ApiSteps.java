@@ -38,4 +38,18 @@ public class ApiSteps {
         assertNull(jsonPath.getString("find{it.email=='" + email + "'}.name"));
         assertNull(jsonPath.getString("find{it.email=='" + email + "'}.email"));
     }
+
+    @And("assert the negative registration invalid name via API using name {string}")
+    public void assertTheNegativeRegistrationInvalidNameViaAPIUsingName(String name) {
+        Response response = given(spec()).get( "/users");
+        response.prettyPrint();
+        JsonPath jsonPath = response.jsonPath();
+        String actualName =  jsonPath.getString("find{it.name=='"+ name +"'}.name");
+        assertEquals(fullName, actualName);
+//        System.out.println("Full Name: " + fullName);
+//        System.out.println("Actual Name: " + actualName);
+
+        //This is a bug!, Should not accept invalid name
+        assert false;
+    }
 }
