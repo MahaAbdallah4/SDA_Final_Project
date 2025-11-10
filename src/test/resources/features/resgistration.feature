@@ -27,8 +27,9 @@ Feature: Registration Feature
     Then User should see: The name field is required. error message
     And assert the negative registration via API using email "testYaser@gmail.com"
 
-  @NegativeRegistration
-  Scenario: Registration Negative
+    #TC003
+  @TC03_NegativeRegistration
+  Scenario: Verify invalid email format
     Given user goes to homepage
     When user clicks registration link
     And user enters email for sign up "invalid_email.com"
