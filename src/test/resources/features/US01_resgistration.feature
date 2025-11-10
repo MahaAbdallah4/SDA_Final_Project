@@ -52,3 +52,16 @@ Feature: Registration Feature
     And user clicks the sing up button
     Then user should see: invalid name message error
     And assert the negative registration invalid name via API using name "J@*hn"
+
+    #TC005
+  @TC05_NegativeRegistration
+  Scenario: Verify validation for short password
+    Given user goes to homepage
+    When user clicks registration link
+    And user enters email for sign up "faker"
+    And user enters full name for sign up "John"
+    And user enters short password for sign up "Pass1"
+    And user enters confirm password for sign up "Pass1"
+    And user clicks the sing up button
+    Then user should see: The password field must be at least 6 characters. error message
+    And assert the registration via API
