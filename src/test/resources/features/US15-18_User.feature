@@ -9,23 +9,43 @@ Feature: Admin manages users (Add, Edit, Delete)
     When admin navigates to "Users" page
     And admin clicks "Add User"
     And admin fills user form with:
-      | name | email        | role     | password  | Password Confirmation |
-      | ema  | emm891@test.com | customer | Pass123   | Pass123               |
+      | name | email           | role     | password | Password Confirmation |
+      | ema  | emm891@test.com | customer | Pass123  | Pass123               |
     And admin submits the user form
     Then system should show success message "User added successfully"
     And the new user "emm891@test.com" should appear in the user list
+
+  @NegativeAddUser
+  Scenario: Add a new user as an Admin
+    When admin navigates to "Users" page
+    And admin clicks "Add User"
+    And admin fills user form with:
+      | name | email           | role     | password | Password Confirmation |
+      | ema  | emm891_test.com | customer | Pass123  | Pass123               |
+    And admin submits the user form
+    Then system should show invalid email error
+
+  @NegativeAddUser
+  Scenario: Add a new user as an Admin
+    When admin navigates to "Users" page
+    And admin clicks "Add User"
+    And admin fills user form with:
+      | name | email | role     | password | Password Confirmation |
+      | ema  |       | customer | Pass123  | Pass123               |
+    And admin submits the user form
+    Then system should show success message "The email field is required."
 
   @EditUser
   Scenario: Edit an existing user details
     When admin navigates to "Users" page
     And admin opens edit for user "emm891@test.com"
     And admin updates user fields:
-      | role |
+      | role     |
       | customer |
     And admin saves the changes
     Then system should show success message "User details updated successfully"
     And user "emm891@test.com" should show:
-      | role |
+      | role     |
       | customer |
 
   @DeleteUser

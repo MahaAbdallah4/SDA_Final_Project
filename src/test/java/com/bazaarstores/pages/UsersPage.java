@@ -38,6 +38,24 @@ public class UsersPage {
     @FindBy(xpath = "//button[contains(@onclick,'confirmDelete')]")
     public WebElement deleteButton;
 
+    @FindBy(xpath = "//div[contains(@class,'alert-danger')]//li")
+    public WebElement errorMessage;
+
+    @FindBy(xpath = "//div[contains(@class,'invalid-feedback')]")
+    public WebElement invalidEmailMessage;
+
+    public String getErrorMessageText() {
+        try {
+            if (errorMessage.isDisplayed()) {
+                return errorMessage.getText().trim();
+            } else if (invalidEmailMessage.isDisplayed()) {
+                return invalidEmailMessage.getText().trim();
+            }
+        } catch (Exception e) {
+            return "No error message found";
+        }
+        return "";
+    }
     public void fillUserForm(String name, String email, String role, String password) {
         nameInput.clear();
         nameInput.sendKeys(name);

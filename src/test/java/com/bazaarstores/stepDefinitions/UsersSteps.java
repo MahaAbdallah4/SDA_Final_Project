@@ -46,7 +46,6 @@ public class UsersSteps {
             Driver.getDriver().findElement(By.xpath("//button[contains(text(),'" + buttonName + "')]")).click();
         }
     }
-
     @When("admin fills user form with:")
     public void admin_fills_user_form_with(DataTable dataTable) {
         List<Map<String, String>> users = dataTable.asMaps(String.class, String.class);
@@ -59,19 +58,23 @@ public class UsersSteps {
             WebElement passwordConfirmation = Driver.getDriver().findElement(By.name("password_confirmation"));
 
             name.clear();
-            name.sendKeys(user.get("name"));
+            if (user.get("name") != null && !user.get("name").isEmpty())
+                name.sendKeys(user.get("name"));
 
             email.clear();
-            email.sendKeys(user.get("email"));
+            if (user.get("email") != null && !user.get("email").isEmpty())
+                email.sendKeys(user.get("email"));
 
             Select select = new Select(role);
             select.selectByValue(user.get("role").toLowerCase());
 
             password.clear();
-            password.sendKeys(user.get("password"));
+            if (user.get("password") != null && !user.get("password").isEmpty())
+                password.sendKeys(user.get("password"));
 
             passwordConfirmation.clear();
-            passwordConfirmation.sendKeys(user.get("Password Confirmation"));
+            if (user.get("Password Confirmation") != null && !user.get("Password Confirmation").isEmpty())
+                passwordConfirmation.sendKeys(user.get("Password Confirmation"));
         }
     }
 
@@ -81,23 +84,24 @@ public class UsersSteps {
         Driver.getDriver().findElement(By.xpath("//button[@type='submit' and contains(text(),'Submit')]")).click();
     }
 
+    @Then("system should show invalid email error")
+    public void system_should_show_invalid_email_error() {
+        WebElement emailField = Driver.getDriver().findElement(By.id("email-id-column"));
+        String validationMessage = emailField.getAttribute("validationMessage");
+        System.out.println("Browser validation message: " + validationMessage);
+        Assert.assertTrue(validationMessage.contains("@"));
+    }
     @Then("system should show success message {string}")
     public void system_should_show_success_message(String expectedMessage) {
         WebDriverWait wait = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10));
-
-        try {
-            WebElement successToast = wait.until(
-                    ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@class,'toast-success')]"))
-            );
-            Assert.assertTrue("Success toast message is not displayed", successToast.isDisplayed());
-            System.out.println(" Success message appeared: " + successToast.getText());
-        } catch (TimeoutException e) {
-            WebElement errorAlert = Driver.getDriver().findElement(By.xpath("//div[contains(@class,'alert-danger')]"));
-            System.out.println(" Error appeared: " + errorAlert.getText());
-            Assert.fail("Expected success message, but got error: " + errorAlert.getText());
-        }
-
+        WebElement alert = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                By.xpath("//div[contains(@class,'alert-danger')]//li")));
+        String actualMessage = alert.getText().trim();
+        System.out.println("Displayed error message: " + actualMessage);
+        Assert.assertEquals(expectedMessage, actualMessage);
     }
+
+
 
     @Then("the new user {string} should appear in the user list")
     public void the_new_user_should_appear_in_the_user_list(String email) {
@@ -116,6 +120,15 @@ public class UsersSteps {
         Assert.assertTrue(" New user should appear in the list but was not found.", isUserVisible);
         System.out.println(" User " + email + " appeared successfully in the list!");
     }
+
+    @Then("system should show error message {string}")
+    public void system_should_show_error_message(String expectedMessage) {
+        String actualMessage = allPages.getUsersPage().getErrorMessageText();
+        Assert.assertEquals(expectedMessage, actualMessage);
+        System.out.println("Error message appeared: " + actualMessage);
+    }
+
+
 
 
     @When("admin opens edit for user {string}")
@@ -185,15 +198,7 @@ public class UsersSteps {
         cancelButton.click();
     }
 
-    @Then("system should show error message {string}")
-    public void system_should_show_error_message(String expectedError) {
-        WebDriverWait wait = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10));
-        WebElement errorToast = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.cssSelector("div.toast-message")));
-        String actualError = errorToast.getText().trim();
-        System.out.println("Error message appeared: " + actualError);
-        Assert.assertEquals("Error message mismatch!", expectedError, actualError);
-    }
+
 
     @Then("user {string} should remain in the list")
     public void user_should_remain_in_the_list(String email) {
