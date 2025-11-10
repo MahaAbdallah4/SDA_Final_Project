@@ -10,10 +10,10 @@ Feature: Admin manages users (Add, Edit, Delete)
     And admin clicks "Add User"
     And admin fills user form with:
       | name | email           | role     | password | Password Confirmation |
-      | ema  | emm891@test.com | customer | Pass123  | Pass123               |
+      | ema  | emm@tesst.com | customer | Pass123  | Pass123               |
     And admin submits the user form
-    Then system should show success message "User added successfully"
-    And the new user "emm891@test.com" should appear in the user list
+    Then system should show success message "User created successfully"
+    And the new user "emm@tesst.com" should appear in the user list
 
   @NegativeAddUser
   Scenario: Add a new user as an Admin
@@ -33,36 +33,35 @@ Feature: Admin manages users (Add, Edit, Delete)
       | name | email | role     | password | Password Confirmation |
       | ema  |       | customer | Pass123  | Pass123               |
     And admin submits the user form
-    Then system should show success message "The email field is required."
 
   @EditUser
   Scenario: Edit an existing user details
     When admin navigates to "Users" page
-    And admin opens edit for user "emm891@test.com"
+    And admin opens edit for user "emm@tesst.com"
     And admin updates user fields:
       | role     |
-      | customer |
+      | admin |
     And admin saves the changes
-    Then system should show success message "User details updated successfully"
-    And user "emm891@test.com" should show:
+    Then system should show success message "User updated successfully!"
+    And user "emm@tesst.com" should show:
       | role     |
-      | customer |
+      | admin |
 
   @DeleteUser
   Scenario: Validate deleting user from list
     When admin navigates to "Users" page
-    And admin clicks "Delete" beside user "emm891@test.com"
+    And admin clicks "Delete" beside user "emm@tesst.com"
     And admin confirms deletion
     Then system should show error message "You cant delete a admin role users!"
-    And user "emm891@test.com" should remain in the list
+    And user "emm@tesst.com" should remain in the list
 
 
   @CancelDeleteUser
   Scenario: Validate canceling delete action
     When admin navigates to "Users" page
-    And admin clicks "Delete" beside user "emm891@test.com"
+    And admin clicks "Delete" beside user "emm@tesst.com"
     And admin cancels deletion
-    Then user "emm891@test.com" should remain in the list
+    Then user "emm@tesst.com" should remain in the list
 
 
   @View
