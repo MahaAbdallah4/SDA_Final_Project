@@ -17,12 +17,14 @@ import static org.junit.Assert.assertNull;
 
 public class ApiSteps {
 
+    Response response;
+    JsonPath jsonPath;
 
     @When("assert the registration via API")
     public void assertTheRegistrationViaAPI() {
-        Response response = given(spec()).get("/users");
+        response = given(spec()).get("/users");
         response.prettyPrint();
-        JsonPath jsonPath = response.jsonPath();
+        jsonPath = response.jsonPath();
         String actualName = jsonPath.getString("find{it.email=='" + email + "'}.name");
         String actualEmail = jsonPath.getString("find{it.email=='" + email + "'}.email");
         assertEquals(email, actualEmail);
@@ -32,18 +34,18 @@ public class ApiSteps {
 
     @And("assert the negative registration via API using email {string}")
     public void assertTheNegativeRegistrationViaAPIUsingEmail(String email) {
-        Response response = given(spec()).get("/users");
+        response = given(spec()).get("/users");
         response.prettyPrint();
-        JsonPath jsonPath = response.jsonPath();
+        jsonPath = response.jsonPath();
         assertNull(jsonPath.getString("find{it.email=='" + email + "'}.name"));
         assertNull(jsonPath.getString("find{it.email=='" + email + "'}.email"));
     }
 
     @And("assert the negative registration invalid name via API using name {string}")
     public void assertTheNegativeRegistrationInvalidNameViaAPIUsingName(String name) {
-        Response response = given(spec()).get( "/users");
+        response = given(spec()).get( "/users");
         response.prettyPrint();
-        JsonPath jsonPath = response.jsonPath();
+        jsonPath = response.jsonPath();
         String actualName =  jsonPath.getString("find{it.name=='"+ name +"'}.name");
         assertEquals(fullName, actualName);
 //        System.out.println("Full Name: " + fullName);
