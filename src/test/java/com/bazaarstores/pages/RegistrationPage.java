@@ -16,6 +16,7 @@ public class RegistrationPage extends BasePage {
     private final By invalidEmailMessage = By.xpath("//li[.='The email field must be a valid email address.']");
     private final By nameFieldRequiredMessage = By.xpath("//li[.='The name field is required.']");
     private final By passwordTooShortMessage = By.xpath("//li[.='The password field must be at least 6 characters.']");
+    private final By passwordNotMatch = By.xpath("//li[.='The password field confirmation does not match.']");
 
 
     public RegistrationPage enterEmail(String email) {
@@ -63,6 +64,14 @@ public class RegistrationPage extends BasePage {
         assertEquals(
                 "The password field must be at least 6 characters.",
                 Driver.getDriver().findElement(passwordTooShortMessage).getText()
+        );
+        return this;
+    }
+
+    public RegistrationPage validatePasswordNotMatch() {
+        assertEquals(
+                "The password field confirmation does not match.",
+                Driver.getDriver().findElement(passwordNotMatch).getText()
         );
         return this;
     }

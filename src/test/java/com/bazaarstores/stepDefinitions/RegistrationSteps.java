@@ -87,4 +87,9 @@ public class RegistrationSteps {
     public void userShouldSeeThePasswordFieldMustBeAtLeastCharactersErrorMessage(int atLeast6) {
         pages.getRegistrationPage().validatePasswordTooShort();
     }
+
+    @Then("user should see: The password field confirmation does not match. error message")
+    public void userShouldSeeThePasswordFieldConfirmationDoesNotMatchErrorMessage() {
+        pages.getRegistrationPage().validatePasswordNotMatch();
+    }
 }

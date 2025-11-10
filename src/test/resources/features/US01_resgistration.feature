@@ -65,3 +65,16 @@ Feature: Registration Feature
     And user clicks the sing up button
     Then user should see: The password field must be at least 6 characters. error message
     And assert the negative registration via API using email "faker"
+
+    #TC06
+  @TC06_NegativeRegistration
+  Scenario: Verify error message when passwords do not match
+    Given user goes to homepage
+    When user clicks registration link
+    And user enters email for sign up "faker"
+    And user enters full name for sign up "John Doe"
+    And user enters password for sign up
+    And user enters confirm password for sign up "Pass1"
+    And user clicks the sing up button
+    Then user should see: The password field confirmation does not match. error message
+    And assert the negative registration via API using email "faker"
