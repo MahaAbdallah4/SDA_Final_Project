@@ -20,6 +20,8 @@ public class DashboardPage extends BasePage {
     private final By productsLink = By.cssSelector("a[href*='products'], button:contains('Products')");
     private final By logoutButton = By.cssSelector("button:contains('Logout'), a:contains('Logout')");
     private final By userName = By.cssSelector(".user-name, [class*='username']");
+    private final By profileIcon = By.className("profile-icon");
+    private final By clickLogout = By.className("logout");
 
 
     // Navigation Methods
@@ -38,6 +40,13 @@ public class DashboardPage extends BasePage {
     public LoginPage clickLogout() {
         click(logoutButton);
         return new LoginPage();
+    }
+
+    public void clickProfileIcon() {
+        click(profileIcon);
+    }
+    public void clickLogoutButton() {
+        click(clickLogout);
     }
 
     // Verification Methods
