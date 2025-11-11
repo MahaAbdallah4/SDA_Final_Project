@@ -14,7 +14,7 @@ import org.junit.runner.RunWith;
         },
         features = "src/test/resources/features",
         glue = "com.bazaarstores.stepDefinitions",
-        tags = "@TC06_NegativeRegistration",
+        tags = "@ApiTest",
         dryRun = false
 )
 public class Runner {

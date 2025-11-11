@@ -2,7 +2,7 @@
 Feature: Registration Feature
 
     #TC001
-  @TC01_HappyPathRegistration
+  @TC01_HappyPathRegistration @ApiTest
   Scenario: Registration Happy Path
     Given user goes to homepage
     When user clicks registration link
@@ -78,3 +78,11 @@ Feature: Registration Feature
     And user clicks the sing up button
     Then user should see: The password field confirmation does not match. error message
     And assert the negative registration via API using email "faker"
+
+    #TC07
+  @TC07_BackendValidation @ApiTest
+  Scenario: Verify backend validation of user registration
+    Given user has successfully registered via the UI
+    When a GET request is sent to the API using the registered email
+    Then API should return status code 200
+    And response should include the correct Name,and Email

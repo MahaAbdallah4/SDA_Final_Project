@@ -3,6 +3,8 @@ package com.bazaarstores.stepDefinitions;
 
 import io.cucumber.java.PendingException;
 import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
@@ -53,5 +55,37 @@ public class ApiSteps {
 
         //This is a bug!, Should not accept invalid name
         assert false;
+    }
+
+    @Given("user has successfully registered via the UI")
+    public void userHasSuccessfullyRegisteredViaTheUI() {
+        System.out.println("User successfully registered with email: " + email);
+    }
+
+    @When("a GET request is sent to the API using the registered email")
+    public void aGETRequestIsSentToTheAPIUsingTheRegisteredEmail() {
+        response = given(spec()).get("/users");
+        response.prettyPrint();
+        jsonPath = response.jsonPath();
+    }
+
+    @Then("API should return status code {int}")
+    public void apiShouldReturnStatusCode(int arg0) {
+        assertEquals(200, response.statusCode());
+    }
+
+    @And("response should include the correct Name,and Email")
+    public void responseShouldIncludeTheCorrectNameAndEmail() {
+        String actualName = jsonPath.getString("find{it.email=='" + email + "'}.name");
+        String actualEmail = jsonPath.getString("find{it.email=='" + email + "'}.email");
+
+        System.out.println("Expected Name: " + fullName);
+        System.out.println("Expected Email: " + email);
+        System.out.println("Actual Name from API: " + actualName);
+        System.out.println("Actual Email from API: " + actualEmail);
+
+
+        assertEquals(fullName, actualName);
+        assertEquals(email, actualEmail);
     }
 }
