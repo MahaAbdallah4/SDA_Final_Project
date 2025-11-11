@@ -1,3 +1,4 @@
+@AdminDeleteStoreFeature
 Feature: Admin Delete Store Functionality
 
   Background:
