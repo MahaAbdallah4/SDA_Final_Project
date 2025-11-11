@@ -1,9 +1,11 @@
 Feature: Admin Delete Store Functionality
 
+  Background:
+    Given Logged in and store exists
+
   #TC_US21_001 – Validate delete confirmation dialog appears
   @US21 @ConfirmDelete
   Scenario: TC_US21_001 Validate delete confirmation dialog appears
-    Given Logged in and store exists
     When Admin navigates to the store list
     And Admin clicks delete
     Then a confirmation dialog appears
@@ -11,7 +13,6 @@ Feature: Admin Delete Store Functionality
 #TC_US21_002 – Validate store is removed upon confirmation
   @US21 @ValidDelete
   Scenario: TC_US21_002 Validate store remains if deletion is canceled
-    Given Logged in and store exists
     When Admin navigates to the store list
     And Admin clicks delete
     And Admin confirms deletion
@@ -20,7 +21,6 @@ Feature: Admin Delete Store Functionality
 #TC_US21_003 – Validate store remains if deletion is canceled
   @US21 @ValidDeleteCancel
   Scenario: TC_US21_003 Validate store remains if deletion is canceled
-    Given Logged in and store exists
     When Admin navigates to the store list
     And Admin clicks delete
     And Admin cancels deletion
