@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -129,12 +130,8 @@ public class ProductSteps {
     // ---------------US6---------------
     @Given("user is on the product detail page for {string}")
     public void userIsOnTheProductDetailPageFor(String productName) {
-        productPage.openProductPage(productName);
-
-        Assert.assertTrue(
-                productName + " product detail page is not displayed!",
-                productPage.isProductDisplayed(productName)
-        );
+        boolean inCart = productPage.isProductInCart(productName);
+        Assert.assertTrue("Product was not added to the cart!", inCart);
     }
 
     @When("user clicks the {string} button for product {string}")
@@ -149,7 +146,7 @@ public class ProductSteps {
     @Then("product {string} should be added successfully and cart count should update")
     public void productShouldBeAddedSuccessfullyAndCartCountShouldUpdate(String productName) {
 
-        boolean inCart = productPage.isProductInCart(productName);
+        boolean inCart = productPage.isProductaddedInCart(productName);
         Assert.assertTrue("Product was not added to the cart!", inCart);
 
     }
@@ -264,26 +261,50 @@ public class ProductSteps {
         response.then().statusCode(200);
         System.out.println("API endpoint is active: " + endpoint);
     }
+    @When("user adds product ID {int} to favorites for user ID {int}")
+    public void userAddsProductToFavorites(int productId, int userId) {
+        response = given()
+                .spec(ApiUtilities.spec())
+                .contentType("application/json")
+                .body(Map.of("user_id", userId, "product_id", productId))
+                .when()
+                .post("/favorites");
+        response.then().statusCode(201); // or whatever the API returns
+        System.out.println("Added product " + productId + " to favorites for user " + userId);
+    }
 
-    @When("user sends GET request for user ID {int}")
+    @And("user sends GET request for user ID {int}")
     public void userSendsGETRequestForUserID(int userId) {
         response = given()
                 .spec(ApiUtilities.spec())
                 .queryParam("user_id", userId)
                 .when()
-                .get("/api/favorites");
+                .get("/favorites");
         response.prettyPrint();
     }
+
 
     @Then("the added product {string} should appear in the API response")
     public void theAddedProductStringShouldAppearInTheAPIResponse(String productName) {
 
         response.then().statusCode(200);
 
-        List<String> productNames = response.jsonPath().getList("products.name");
-        Assert.assertTrue("Product '" + productName + "' not found in API response!", productNames.contains(productName));
-        System.out.println(" Product is present in API response: " + productName);
+        List<Map<String, Object>> favorites = response.jsonPath().getList("$");
+        boolean found = false;
+        for (Map<String, Object> fav : favorites) {
+            Map<String, Object> product = (Map<String, Object>) fav.get("product");
+            if (product != null && productName.equals(product.get("name"))) {
+                found = true;
+                break;
+            }
+        }
+
+        Assert.assertTrue("Product '" + productName + "' not found in API response!", found);
+        System.out.println("Product is present in API response: " + productName);
     }
+
+
+
 
 
     @And("removal of the product {string} should update the favorites list correctly for user ID {int}")

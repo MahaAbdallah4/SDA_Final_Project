@@ -8,7 +8,6 @@ Feature: US06 - Add to Cart functionality
   @UI
 
   Scenario: TC06-01 Validate “Add to Cart” functionality from UI
-    Given user is on the product detail page for "E-Book Reader"
     When user clicks the "Add to Cart" button for product "E-Book Reader"
     Then product "E-Book Reader" should be added successfully and cart count should update
 

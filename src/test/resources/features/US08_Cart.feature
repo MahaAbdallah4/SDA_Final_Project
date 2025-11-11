@@ -6,8 +6,8 @@ Feature: US08 - Cart functionality
 
   @UI
   Scenario: TC08-01 Validate cart icon hover shows “View Cart”
-    Given  user opens a product named "Laptop"
-    And user clicks the "Add to Cart" button for product "Laptop"
+    Given  user opens a product named "Flower"
+    And user clicks the "Add to Cart" button for product "Flower"
     When user hovers over the cart icon in the header
     Then “View Cart” should appear
     And clicking it should navigate to the cart page
@@ -15,12 +15,12 @@ Feature: US08 - Cart functionality
   @UI
   Scenario: TC08-02 Validate cart contents and total price
     Given the user has added multiple products including
-      | Laptop |
+      | Flower |
       | Jeans  |
 
     Then all added products should appear with correct prices
       | Product Name | Price   |
-      | Laptop       | $500.00 |
+      | Flower       | $400.00 |
       | Jeans        | $400.00 |
 
 

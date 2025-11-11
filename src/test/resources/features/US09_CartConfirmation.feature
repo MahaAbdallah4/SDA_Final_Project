@@ -16,6 +16,6 @@ Feature: US09 - Cart Confirmation
 
   @API
   Scenario: TC09-02 Validate confirmation via API
-    Given the API endpoint "/api/cart/confirm" is active
+    Given the API endpoint "/cart" is active
     When user sends a POST request to confirm the cart for user ID 601
     Then the API response should return status “confirmed”

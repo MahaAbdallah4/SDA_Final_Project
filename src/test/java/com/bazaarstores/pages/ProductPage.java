@@ -99,7 +99,7 @@ public class ProductPage extends BasePage {
 
     // ---------- Add to Cart / Wishlist ----------
     // ---------- Add to Cart / Wishlist ----------
-    public void clickAddToCart(String productName)  {
+    public void clickAddToCart(String productName) {
         By addToCartBtn = By.xpath(
                 "//div[contains(@class,'product-card')]//h3[contains(normalize-space(.),'" + productName + "')]"
                         + "/ancestor::div[contains(@class,'product-card')]//button[contains(@class,'add-to-cart')]"
@@ -116,7 +116,7 @@ public class ProductPage extends BasePage {
 
     }
 
-    public void addToCartAndWait(String productName)  {
+    public void addToCartAndWait(String productName) {
         int previousCount = getCartCount();
 
         // Click the Add to Cart button
@@ -129,7 +129,6 @@ public class ProductPage extends BasePage {
             System.out.println("Cart update not detected within wait, product may still be added.");
         }
     }
-
 
 
     public void clickFavoriteIcon(String productName) {
@@ -297,7 +296,9 @@ public class ProductPage extends BasePage {
             return Driver.getDriver().findElement(locator).isDisplayed();
         } catch (Exception e) {
             return false;
-        }}
+        }
+    }
+
     // ProductPage.java
     public boolean isProductVisibleInCart(String productName) {
         By productLocator = By.xpath("//div[contains(@class,'cart-item')]//div[contains(@class,'cart-item-name') and normalize-space(text())='" + productName + "']");
@@ -343,7 +344,6 @@ public class ProductPage extends BasePage {
     }
 
 
-
     // Check if product is in cart
     public boolean isProductInCart(String productName) {
         try {
@@ -354,22 +354,36 @@ public class ProductPage extends BasePage {
             return getAllCartProductNames().contains(productName);
         }
     }
-    public boolean waitForProductInCart(String productName, int timeoutSeconds) {
-        int attempts = 0;
-        int interval = 500; // milliseconds
-        int maxAttempts = (timeoutSeconds * 100) / interval;
+    public boolean isProductaddedInCart(String productName) {
+        try {
+            hoverOverCartIcon();
 
-        while (attempts < maxAttempts) {
-            if (isProductVisibleInCart(productName)) {
-                return true;
+            By cartDropdown = By.cssSelector(".cart-dropdown, .mini-cart, .dropdown-menu");
+            By productInCart = By.xpath("//*[contains(@class,'cart')]//*[contains(text(),'" + productName + "')]");
+
+            // Retry finding product a few times (in case cart updates slowly)
+            for (int i = 0; i < 5; i++) {
+                try {
+                    List<WebElement> products = Driver.getDriver().findElements(productInCart);
+                    if (!products.isEmpty() && products.get(0).isDisplayed()) {
+                        return true;
+                    }
+                    Thread.sleep(500); // short pause before retry
+                } catch (StaleElementReferenceException e) {
+                    // Element became stale; retry after re-finding
+                    Thread.sleep(500);
+                }
             }
-            try {
-                Thread.sleep(interval);
-            } catch (InterruptedException ignored) {}
-            attempts++;
+
+            return false;
+
+        } catch (Exception e) {
+            System.out.println("⚠️ Product not visible in cart: " + e.getMessage());
+            return false;
         }
-        return false;
     }
+
+
 
 
     // Get product price dynamically by name
@@ -398,9 +412,9 @@ public class ProductPage extends BasePage {
             }
             // Refresh the list after each pass
             removeButtons = Driver.getDriver().findElements(By.cssSelector("button.remove-item"));
-        }}
+        }
+    }
 
-    // Wait for a button or element that contains specific text
 
 
     // Hover over cart and check for "View Cart" visibility

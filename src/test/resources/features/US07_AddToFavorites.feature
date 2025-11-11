@@ -22,7 +22,7 @@ Feature: US07 - Favorites functionality
 
   @API
   Scenario: TC07-03 Validate favorites list via API
-    Given the API endpoint "/api/favorites" is active
-    When user sends GET request for user ID 501
-    Then the added product "Jeans" should appear in the API response
-    And removal of the product "Jeans" should update the favorites list correctly for user ID 501
+    Given the API endpoint "/favorites" is active
+    When user sends GET request for user ID 355
+    Then the added product "Flower" should appear in the API response
+    And removal of the product "Jeans" should update the favorites list correctly for user ID 49
