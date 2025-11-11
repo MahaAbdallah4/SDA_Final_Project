@@ -46,4 +46,22 @@ public class LogoutSteps {
                 pages.getLoginPage().isLoginPageDisplayed());
     }
 
+    @When("the user performs the logout action")
+    public void theUserPerformsTheLogoutAction() {
+        pages.getDashboardPage().clickProfileIcon();
+        pages.getDashboardPage().clickLogoutButton();
+    }
+
+    @And("the user clicks the browser Back button")
+    public void theUserClicksTheBrowserBackButton() {
+        pages.getDashboardPage().navigateBack();
+    }
+
+    @Then("the user should not be able to access the dashboard")
+    public void theUserShouldNotBeAbleToAccessTheDashboard() {
+        //This is a bug! Should not be able to access the dashboard after logout
+        pages.getDashboardPage().isDashboardPageDisplayed();
+        assert false;
+    }
+
 }
