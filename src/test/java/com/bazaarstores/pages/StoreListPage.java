@@ -24,26 +24,44 @@ public class StoreListPage {
     }
 
     public void clickEditButton(String storeName) {
+        // Find all rows
         List<WebElement> rows = driver.findElements(storeList);
         for (WebElement row : rows) {
-            if (row.findElement(By.xpath(".//td[1]")).getText().equals(storeName)) {
-                row.findElement(By.cssSelector(".btn.btn-outline-primary.me-1.no-hover")).click();
-                return;
+            // Check if the store name matches
+            WebElement storeNameCell = row.findElement(By.xpath(".//td[1]")); // First <td> for the store name
+            if (storeNameCell.getText().equals(storeName)) {
+                // Get the edit button within the same row
+                WebElement editButton = row.findElement(By.xpath(".//button[contains(@class, 'btn-outline-primary')][1]"));
+                editButton.click(); // Click the edit button
+
+                return; // Exit once the button is clicked
             }
         }
         throw new RuntimeException("Edit button not found for store: " + storeName);
     }
 
-    public void clickDeleteButton(String storeName) {
+    public void clickDeleteButtonById(String storeId) {
         List<WebElement> rows = driver.findElements(storeList);
         for (WebElement row : rows) {
-            if (row.findElement(By.xpath(".//td[1]")).getText().equals(storeName)) {
+            String currentStoreId = row.findElement(By.xpath(".//td[1]")).getAttribute("data-store-id"); // Assuming you have an attribute for store ID
+            if (currentStoreId.equals(storeId)) {
                 WebElement deleteButton = row.findElement(By.xpath(".//button[contains(@onclick, 'confirmDelete')]"));
                 deleteButton.click(); // Click the delete button in the same row
                 return;
             }
         }
-        throw new RuntimeException("Delete button not found for store: " + storeName);
+        throw new RuntimeException("Delete button not found for store ID: " + storeId);
+    }
+
+    public boolean isStoreDisplayedById(String storeId) {
+        List<WebElement> rows = driver.findElements(storeList);
+        for (WebElement row : rows) {
+            String currentStoreId = row.findElement(By.xpath(".//td[1]")).getAttribute("data-store-id"); // Assuming you have an attribute for store ID
+            if (currentStoreId.equals(storeId)) {
+                return true; // Store ID found
+            }
+        }
+        return false; // Store ID not found
     }
 
     public boolean isConfirmationDialogDisplayed() {
@@ -65,4 +83,5 @@ public class StoreListPage {
             throw new RuntimeException("Confirmation dialog is not displayed.");
         }
     }
+
 }

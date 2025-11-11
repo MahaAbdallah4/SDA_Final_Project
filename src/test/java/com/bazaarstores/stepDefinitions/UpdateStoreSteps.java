@@ -23,10 +23,13 @@ public class UpdateStoreSteps {
     private Response apiResponse;
     private LoginPage loginPage;
     private DashboardPage dashboardPage;
+    private String storeName;
+    private StoreListPage storeListPage;
 
     // Constructor to initialize DashboardPage
     public UpdateStoreSteps() {
         dashboardPage = new DashboardPage();
+        storeListPage = new StoreListPage(Driver.getDriver());
     }
 
     @Given("Admin is logged in and store exists")
@@ -39,8 +42,15 @@ public class UpdateStoreSteps {
         loginPage.enterEmail(email);
         loginPage.enterPassword(password);
         dashboardPage = loginPage.clickLoginButton();
-        String token = ApiUtil.loginAndGetToken(email, password);
-        ApiUtil.setToken(token);
+
+        // Fetch the list of stores to ensure at least one exists
+        apiResponse = ApiUtil.get("/stores");
+        Assert.assertEquals(200, apiResponse.getStatusCode());
+
+        // Set storeName from the API response
+        if (apiResponse.jsonPath().getList("").isEmpty()) {
+            throw new RuntimeException("No stores available in the response.");
+        }
     }
 
     @When("Admin navigate to the store list")
@@ -51,12 +61,14 @@ public class UpdateStoreSteps {
 
     @When("Admin select the store to edit")
     public void admin_select_the_store_to_edit() {
-        // Check if any stores are available
-        if (apiResponse.jsonPath().getList("").isEmpty()) {
-            throw new RuntimeException("No stores available in the response.");
+        String storeName = "My New Store"; // Adjust as necessary
+
+        // Check if the store is displayed on the page
+        if (!storeListPage.isStoreDisplayed(storeName)) {
+            throw new RuntimeException("Store not found in the list.");
         }
-        String storeName = apiResponse.jsonPath().getString("[0].name");
-        StoreListPage storeListPage = new StoreListPage(Driver.getDriver());
+
+        // Click the edit button for the specified store
         storeListPage.clickEditButton(storeName);
     }
 

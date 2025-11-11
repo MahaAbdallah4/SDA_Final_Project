@@ -19,7 +19,7 @@ public class DeleteStoreSteps {
     private DashboardPage dashboardPage;
     private LoginPage loginPage;
     private Response apiResponse;
-    private String storeName; // Declare storeName here but initialize it later
+    private String storeId; // Declare storeId to store the ID instead of name
 
     public DeleteStoreSteps() {
         dashboardPage = new DashboardPage();
@@ -41,11 +41,11 @@ public class DeleteStoreSteps {
         apiResponse = ApiUtil.get("/stores");
         Assert.assertEquals(200, apiResponse.getStatusCode());
 
-        // Set storeName from the API response
+        // Set storeId from the API response
         if (apiResponse.jsonPath().getList("").isEmpty()) {
             throw new RuntimeException("No stores available in the response.");
         }
-        storeName = apiResponse.jsonPath().getString("[0].name"); // Initialize storeName
+        storeId = apiResponse.jsonPath().getString("[0].id"); // Initialize storeId with the store ID
     }
 
     @When("Admin navigates to the store list")
@@ -55,7 +55,7 @@ public class DeleteStoreSteps {
 
     @When("Admin clicks delete")
     public void admin_clicks_delete() {
-        storeListPage.clickDeleteButton(storeName); // Pass the store name to delete
+        storeListPage.clickDeleteButtonById(storeId); // Call method with store ID
     }
 
     @Then("a confirmation dialog appears")
@@ -78,7 +78,7 @@ public class DeleteStoreSteps {
         }
 
         // After confirming deletion, check if the store is still displayed
-        Assert.assertFalse("Store is still present in the list", storeListPage.isStoreDisplayed(storeName));
+        Assert.assertFalse("Store is still present in the list", storeListPage.isStoreDisplayedById(storeId));
     }
 
     @When("Admin cancels deletion")
@@ -88,6 +88,6 @@ public class DeleteStoreSteps {
 
     @Then("store remains in the list after cancellation")
     public void store_remains_in_the_list_after_cancellation() {
-        Assert.assertTrue("Expected store to remain, but it has been removed.", storeListPage.isStoreDisplayed(storeName));
+        Assert.assertTrue("Expected store to remain, but it has been removed.", storeListPage.isStoreDisplayedById(storeId));
     }
 }
