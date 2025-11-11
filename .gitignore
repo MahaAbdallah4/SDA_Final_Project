@@ -1,0 +1,90 @@
+# Java compiled files
+*.class
+*.jar
+*.war
+*.ear
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE - IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Test Reports
+test-output/
+reports/
+allure-results/
+allure-report/
+cucumber-reports/
+extent-reports/
+screenshots/
+test-screenshots/
+logs/
+*.log
+
+# OS Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.#*
+
+# Jenkins
+.jenkins/
+jenkins.log
+
+# Configuration files with sensitive data (if you have environment-specific configs)
+# Uncomment if needed:
+# src/test/resources/config.properties
+# src/test/resources/credentials.properties
+
+# Keep this commented unless you want to ignore the main config
+# configurations.properties should be tracked in git for test data
+
+# Package Files
+*.zip
+*.tar.gz
+*.rar
+
+# Backup files
+*.bak
+*.orig
+
+# Node modules (if using any JS tools)
+node_modules/
+package-lock.json
+
+# Gradle (in case someone adds it)
+.gradle/
+gradle/
+gradlew
+gradlew.bat
+
+# Other
+*.pid
+hs_err_pid*
+replay_pid*
