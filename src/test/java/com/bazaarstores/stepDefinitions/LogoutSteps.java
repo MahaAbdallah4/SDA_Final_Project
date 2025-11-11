@@ -40,4 +40,10 @@ public class LogoutSteps {
                 pages.getLoginPage().isLoginPageDisplayed());
     }
 
+    @Then("the user should be redirected to the login page")
+    public void theUserShouldBeRedirectedToTheLoginPage() {
+        assertTrue("User should be redirected to the login page after logout",
+                pages.getLoginPage().isLoginPageDisplayed());
+    }
+
 }
