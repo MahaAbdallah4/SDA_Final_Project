@@ -19,7 +19,8 @@ public class DeleteStoreSteps {
     private DashboardPage dashboardPage;
     private LoginPage loginPage;
     private Response apiResponse;
-    private String storeId; // Declare storeId to store the ID instead of name
+    private String storeId;
+    private String storeName;
 
     public DeleteStoreSteps() {
         dashboardPage = new DashboardPage();
@@ -45,7 +46,15 @@ public class DeleteStoreSteps {
         if (apiResponse.jsonPath().getList("").isEmpty()) {
             throw new RuntimeException("No stores available in the response.");
         }
-        storeId = apiResponse.jsonPath().getString("[0].id"); // Initialize storeId with the store ID
+
+        // Original line:
+        storeId = apiResponse.jsonPath().getString("[0].id");
+
+        // FIX: Add assignment for storeName from the API response
+        storeName = apiResponse.jsonPath().getString("[0].name"); // <-- Add this line
+
+        // Now navigate to the UI list page
+        dashboardPage.navigateToStores();
     }
 
     @When("Admin navigates to the store list")
@@ -55,7 +64,10 @@ public class DeleteStoreSteps {
 
     @When("Admin clicks delete")
     public void admin_clicks_delete() {
-        storeListPage.clickDeleteButtonById(storeId); // Call method with store ID
+        // *** FIX 1: Use the explicit clickDeleteButton method to initiate the action.
+        // We will call the delete button click here, and rely on the confirmation
+        // dialog steps to handle the dialog.
+        storeListPage.clickDeleteButtonOfFirstStore(); // We'll add this new method to StoreListPage
     }
 
     @Then("a confirmation dialog appears")
@@ -65,19 +77,17 @@ public class DeleteStoreSteps {
 
     @When("Admin confirms deletion")
     public void admin_confirms_deletion() {
-        storeListPage.confirmDeletion(); // This will confirm the deletion in the dialog
+        storeListPage.confirmDeletion();
     }
 
     @Then("store is removed and no longer appears in the list")
     public void store_is_removed_and_no_longer_appears_in_the_list() {
-        // Allow some time for the deletion to process if needed
         try {
-            Thread.sleep(1000); // Sleep for 1 second (this is generally not best practice)
+            Thread.sleep(100);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
 
-        // After confirming deletion, check if the store is still displayed
         Assert.assertFalse("Store is still present in the list", storeListPage.isStoreDisplayedById(storeId));
     }
 
@@ -88,6 +98,7 @@ public class DeleteStoreSteps {
 
     @Then("store remains in the list after cancellation")
     public void store_remains_in_the_list_after_cancellation() {
-        Assert.assertTrue("Expected store to remain, but it has been removed.", storeListPage.isStoreDisplayedById(storeId));
+        Assert.assertTrue("Expected store to remain, but it has been removed after cancellation.",
+                storeListPage.isStoreDisplayed(storeName));
     }
 }
