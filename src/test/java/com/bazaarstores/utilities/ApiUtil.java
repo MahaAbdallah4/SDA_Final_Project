@@ -7,8 +7,8 @@ import io.restassured.specification.RequestSpecification;
 import static io.restassured.RestAssured.given;
 
 public class ApiUtil {
-    
-    private static String token;
+
+    private static String token = com.bazaarstores.utilities.TokenGenerator.generateToken();
 
     static {
         RestAssured.baseURI = ConfigReader.getApiBaseUrl();

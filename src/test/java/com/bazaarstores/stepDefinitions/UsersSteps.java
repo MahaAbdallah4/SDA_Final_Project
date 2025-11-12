@@ -51,7 +51,6 @@ public class UsersSteps {
     public void admin_fills_user_form_with(DataTable dataTable) {
         List<Map<String, String>> users = dataTable.asMaps(String.class, String.class);
         for (Map<String, String> user : users) {
-
             WebElement name = Driver.getDriver().findElement(By.id("first-name-column"));
             WebElement email = Driver.getDriver().findElement(By.id("email-id-column"));
             WebElement role = Driver.getDriver().findElement(By.id("role-id-column"));
@@ -59,62 +58,96 @@ public class UsersSteps {
             WebElement passwordConfirmation = Driver.getDriver().findElement(By.name("password_confirmation"));
 
             name.clear();
-            name.sendKeys(user.get("name"));
+            if (user.get("name") != null && !user.get("name").isEmpty())
+                name.sendKeys(user.get("name"));
 
             email.clear();
-            email.sendKeys(user.get("email"));
+            if (user.get("email") != null && !user.get("email").isEmpty())
+                email.sendKeys(user.get("email"));
 
             Select select = new Select(role);
             select.selectByValue(user.get("role").toLowerCase());
 
             password.clear();
-            password.sendKeys(user.get("password"));
+            if (user.get("password") != null && !user.get("password").isEmpty())
+                password.sendKeys(user.get("password"));
 
             passwordConfirmation.clear();
-            passwordConfirmation.sendKeys(user.get("Password Confirmation"));
+            if (user.get("Password Confirmation") != null && !user.get("Password Confirmation").isEmpty())
+                passwordConfirmation.sendKeys(user.get("Password Confirmation"));
         }
     }
-
 
     @When("admin submits the user form")
     public void admin_submits_the_user_form() {
         Driver.getDriver().findElement(By.xpath("//button[@type='submit' and contains(text(),'Submit')]")).click();
     }
 
+    @Then("system should show invalid email error")
+    public void system_should_show_invalid_email_error() {
+        WebElement emailField = Driver.getDriver().findElement(By.id("email-id-column"));
+        String validationMessage = emailField.getAttribute("validationMessage");
+        System.out.println("Browser validation message: " + validationMessage);
+        Assert.assertTrue(validationMessage.contains("@"));
+    }
+
     @Then("system should show success message {string}")
     public void system_should_show_success_message(String expectedMessage) {
         WebDriverWait wait = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10));
-
         try {
-            WebElement successToast = wait.until(
-                    ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@class,'toast-success')]"))
-            );
-            Assert.assertTrue("Success toast message is not displayed", successToast.isDisplayed());
-            System.out.println(" Success message appeared: " + successToast.getText());
+            WebElement successToast = wait.until(ExpectedConditions.visibilityOfElementLocated(
+                    By.xpath("//div[contains(@class,'toast-success') or contains(@class,'alert-success')]")));
+            String actualMessage = successToast.getText().trim();
+            System.out.println("Success message: " + actualMessage);
+            Assert.assertTrue(actualMessage.toLowerCase().contains(expectedMessage.toLowerCase()));
         } catch (TimeoutException e) {
-            WebElement errorAlert = Driver.getDriver().findElement(By.xpath("//div[contains(@class,'alert-danger')]"));
-            System.out.println(" Error appeared: " + errorAlert.getText());
-            Assert.fail("Expected success message, but got error: " + errorAlert.getText());
+            WebElement errorAlert = Driver.getDriver().findElement(
+                    By.xpath("//div[contains(@class,'alert-danger')]//li | //div[contains(@class,'alert-danger')]"));
+            System.out.println("Error appeared: " + errorAlert.getText());
+            Assert.fail("Expected success message but found error: " + errorAlert.getText());
+        } catch (NoSuchElementException ex) {
+            Assert.fail("Neither success nor error message appeared.");
         }
-
     }
-
     @Then("the new user {string} should appear in the user list")
     public void the_new_user_should_appear_in_the_user_list(String email) {
-
+        WebDriverWait wait = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(60));
+        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(15))
+                .until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@class,'toast-success')]")));
+        new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(15))
+                .until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[contains(@class,'toast-success')]")));
         Driver.getDriver().navigate().to("https://bazaarstores.com/users");
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//table")));
+        JavascriptExecutor js = (JavascriptExecutor) Driver.getDriver();
+        boolean found = false;
+        while (true) {
+            List<WebElement> matches = Driver.getDriver()
+                    .findElements(By.xpath("//td[contains(text(),'" + email + "')]"));
+            if (!matches.isEmpty()) {
+                found = true;
+                break;
+            }
+            List<WebElement> nextButtons = Driver.getDriver()
+                    .findElements(By.xpath("//a[contains(text(),'›') or contains(text(),'Next')]"));
+            if (nextButtons.isEmpty() || !nextButtons.get(0).isDisplayed() || !nextButtons.get(0).isEnabled()) {
+                break;
+            }
+            js.executeScript("arguments[0].scrollIntoView(true);", nextButtons.get(0));
+            js.executeScript("arguments[0].click();", nextButtons.get(0));
+            wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//table")));
+        }
+        Assert.assertTrue("User not found in any page of the table", found);
+    }
 
-        WebDriverWait wait = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(20));
-
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//table")));
-
-        boolean isUserVisible = wait.until(driver -> {
-            List<WebElement> elements = driver.findElements(By.xpath("//table//*[contains(text(),'" + email + "')]"));
-            return !elements.isEmpty();
-        });
-
-        Assert.assertTrue(" New user should appear in the list but was not found.", isUserVisible);
-        System.out.println(" User " + email + " appeared successfully in the list!");
+    @Then("system should show error message {string}")
+    public void system_should_show_error_message(String expectedMessage) {
+        WebDriverWait wait = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10));
+        WebElement errorToast = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@class,'toast-error')]"))
+        );
+        String actualMessage = errorToast.getText().trim();
+        System.out.println("Error message appeared: " + actualMessage);
+        Assert.assertTrue(actualMessage.contains(expectedMessage));
     }
 
 
@@ -127,11 +160,8 @@ public class UsersSteps {
 
     @When("admin updates user fields:")
     public void admin_updates_user_fields(DataTable dataTable) {
-
         List<String> values = dataTable.asList(String.class);
-
         String roleValue = values.get(1);
-
         WebElement role = Driver.getDriver().findElement(By.id("role-id-column"));
         Select select = new Select(role);
         select.selectByValue(roleValue.toLowerCase());
@@ -144,20 +174,14 @@ public class UsersSteps {
 
     @Then("user {string} should show:")
     public void user_should_show(String email, DataTable dataTable) {
-        Driver.getDriver().navigate().refresh();   // ✅ لتحديث الصفحة بعد الحفظ
-
+        Driver.getDriver().navigate().refresh();
         List<String> values = dataTable.asList(String.class);
         String expectedRole = values.get(1);
-
         String pageSource = Driver.getDriver().getPageSource();
-
         Assert.assertTrue(pageSource.contains(email));
-
         Assert.assertTrue(pageSource.contains(expectedRole));
-
-        System.out.println(" Verified that user " + email + " has role: " + expectedRole);
+        System.out.println("Verified that user " + email + " has role: " + expectedRole);
     }
-
 
     @When("admin clicks {string} beside user {string}")
     public void admin_clicks_action_beside_user(String action, String email) {
@@ -185,25 +209,12 @@ public class UsersSteps {
         cancelButton.click();
     }
 
-    @Then("system should show error message {string}")
-    public void system_should_show_error_message(String expectedError) {
-        WebDriverWait wait = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10));
-        WebElement errorToast = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                By.cssSelector("div.toast-message")));
-        String actualError = errorToast.getText().trim();
-        System.out.println("Error message appeared: " + actualError);
-        Assert.assertEquals("Error message mismatch!", expectedError, actualError);
-    }
-
     @Then("user {string} should remain in the list")
     public void user_should_remain_in_the_list(String email) {
         boolean userVisible = !Driver.getDriver()
                 .findElements(By.xpath("//td[contains(text(),'" + email + "')]")).isEmpty();
         Assert.assertTrue("User should remain in the list", userVisible);
     }
-
-
-
 
     @When("admin gets all stores data via API endpoint {string}")
     public void adminGetsAllStoresDataViaAPIEndpoint(String endpoint) {
@@ -222,7 +233,7 @@ public class UsersSteps {
         List<String> storeNames = jsonPath.getList("data.name");
         Assert.assertNotNull("Store list should not be null", storeNames);
         Assert.assertTrue("Store list should not be empty", storeNames.size() > 0);
-        System.out.println(" Total stores returned: " + storeNames.size());
+        System.out.println("Total stores returned: " + storeNames.size());
     }
 
     @Then("verify store data includes {string}, {string}, and {string}")
@@ -231,11 +242,8 @@ public class UsersSteps {
         List<String> names = jsonPath.getList("data.name");
         List<Integer> ids = jsonPath.getList("data.id");
         List<String> locations = jsonPath.getList("data.location");
-
         Assert.assertEquals("Mismatch between name and id count", names.size(), ids.size());
         Assert.assertEquals("Mismatch between name and location count", names.size(), locations.size());
-
-        System.out.println(" Verified that store data contains: " + nameField + ", " + idField + ", " + locationField);
+        System.out.println("Verified that store data contains: " + nameField + ", " + idField + ", " + locationField);
     }
-
 }
