@@ -24,26 +24,9 @@ public class ProductPage extends BasePage {
     private By productDescription = By.cssSelector(".product-description");
     private By productImage = By.cssSelector(".product-image");
 
-    @FindBy(xpath = "//input[@type='search' or @placeholder='Search']")
-    public WebElement searchInput;
-
-    @FindBy(xpath = "//button[contains(@type,'submit') or contains(@class,'search')]")
-    public WebElement searchButton;
 
     @FindBy(xpath = "//span[contains(@class,'cart-count') or @id='cart-count']")
     public WebElement cartCountElement;
-
-    @FindBy(xpath = "//div[contains(@class,'toast') or contains(text(),'added')]")
-    public WebElement successToast;
-
-    @FindBy(xpath = "//button[contains(@class,'add-to-cart') or contains(text(),'Add to Cart')]")
-    public WebElement addToCartButton;
-
-    @FindBy(xpath = "//button[contains(@class,'wishlist') or contains(@title,'Add to Wishlist')]")
-    public WebElement addToWishlistButton;
-
-    @FindBy(xpath = "//a[contains(@href,'wishlist') or contains(@class,'wishlist-link')]")
-    public WebElement wishlistIcon;
 
 
     // ---------- Navigation ----------
@@ -70,15 +53,6 @@ public class ProductPage extends BasePage {
         click(product);
     }
 
-    public boolean isProductDisplayed(String productName) {
-        By product = By.xpath(String.format("//h3[@class='product-name' and normalize-space(text())='%s']", productName));
-        return isElementDisplayed(product);
-    }
-
-    public int getTotalProductCount() {
-        List<WebElement> products = findElements(productCards);
-        return products.size();
-    }
 
     public void searchProduct(String productName) {
         WebElement element = Driver.getDriver().findElement(By.xpath("//h3[normalize-space(text())='" + productName + "']"));
@@ -213,16 +187,7 @@ public class ProductPage extends BasePage {
         }
     }
 
-    public boolean isProductInFavorites(String productName) {
-        // Assuming favorite items have a class 'favorite-item' and name inside 'favorite-item-name'
-        By favProduct = By.xpath("//div[contains(@class,'favorite-item')]//div[contains(@class,'favorite-item-name') and normalize-space(text())='" + productName + "']");
-        try {
-            wait.until(ExpectedConditions.visibilityOfElementLocated(favProduct));
-            return true;
-        } catch (TimeoutException e) {
-            return false;
-        }
-    }
+
 
 
     // ---------- Verifications ----------
