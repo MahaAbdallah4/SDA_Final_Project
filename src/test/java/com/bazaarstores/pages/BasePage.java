@@ -56,10 +56,7 @@ public abstract class BasePage {
     }
 
     // Wait Methods
-    public void waitForElementToBeVisible(By locator) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-    }
-
+    public void waitForElementToBeVisible(By locator) { wait.until(ExpectedConditions.visibilityOfElementLocated(locator)); }
     public void waitForElementToBeClickable(By locator) {
         wait.until(ExpectedConditions.elementToBeClickable(locator));
     }
@@ -233,6 +230,16 @@ public abstract class BasePage {
     // Screenshot Method
     public byte[] takeScreenshot() {
         return ((TakesScreenshot) Driver.getDriver()).getScreenshotAs(OutputType.BYTES);
+    }
+
+
+    public By byXpathContainsText(String text) {
+        return By.xpath("//*[contains(normalize-space(text()),'" + text + "')]");
+    }
+    // Case-insensitive XPath
+    public By byXpathContainsTextIgnoreCase(String text) {
+        return By.xpath("//*[contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'"
+                + text.toLowerCase() + "')]");
     }
 
 }

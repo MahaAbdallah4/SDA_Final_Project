@@ -14,8 +14,9 @@ import org.junit.runner.RunWith;
         },
         features = "src/test/resources/features",
         glue = "com.bazaarstores.stepDefinitions",
-        tags = "@Admin",
+        tags = "@US10",
         dryRun = false
+
 )
 public class Runner {
 }
