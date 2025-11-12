@@ -13,9 +13,9 @@ Feature: Add new product as Store Manager
   Scenario: Validate successful product addition
     When Store Manager navigates to "Add Product" page
     And Store Manager fills all fields with valid data
-      | Name  | T_shirt |
-      | Price | 30       |
-      | Stock | 10      |
-      | SKU   | TS023   |
+      | Name  | bag   |
+      | Price | 30    |
+      | Stock | 10    |
+      | SKU   | TS028 |
     And clicks "Submit"
     Then product should appear in the catalog

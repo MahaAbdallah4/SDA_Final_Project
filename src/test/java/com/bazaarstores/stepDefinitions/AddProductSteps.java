@@ -54,6 +54,6 @@ public class AddProductSteps {
 
     @Then("product should appear in the catalog")
     public void product_should_appear_in_the_catalog() {
-        Assert.assertTrue("Product not found in catalog!", allPages.getAddProductPage().isProductInCatalog("T-shirt"));
+        Assert.assertTrue("Product not found in catalog!", allPages.getAddProductPage().isProductInCatalog("bag"));
     }
 }
