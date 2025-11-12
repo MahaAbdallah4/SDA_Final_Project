@@ -7,6 +7,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static io.restassured.RestAssured.given;
@@ -32,5 +33,17 @@ public class ApiUtilities {
                 .post(ConfigReader.getApiBaseUrl() + "/login");
         return response.jsonPath().getString("authorisation.token");
     }
+
+    public static List<String> getStoreList() {
+        Response response = given(spec())
+                .when()
+                .get("/stores")
+                .then()
+                .statusCode(200)
+                .extract().response();
+
+        return response.jsonPath().getList("data.name");
+    }
+
 
 }

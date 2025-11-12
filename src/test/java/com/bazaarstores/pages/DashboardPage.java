@@ -6,6 +6,8 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
@@ -14,7 +16,7 @@ public class DashboardPage extends BasePage {
 
 
     // By Locators
-    private final By dashboard = By.xpath("//div[@class='products-grid']");
+    private final By dashboard = By.xpath("//span[normalize-space()='Dashboard']");
     private final By profileVisitChart = By.xpath("//div[@class='card-body']");
     private final By welcomeMessage = By.cssSelector(".welcome-message, [class*='welcome']");
     private final By profileLink = By.cssSelector("a[href*='profile'], button:contains('Profile')");
@@ -176,6 +178,25 @@ public class DashboardPage extends BasePage {
     public String getUpdatedStoreAdmins() {
         return getText(updatedStoreAdmins);
     }
+
+
+}
+    public void navigateToPage(String pageName) {
+        WebDriverWait wait = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10));
+
+        if (pageName.equalsIgnoreCase("Users")) {
+            WebElement usersMenu = wait.until(
+                    ExpectedConditions.elementToBeClickable(By.xpath("//span[normalize-space()='Users']"))
+            );
+            usersMenu.click();
+        } else {
+            WebElement pageLink = wait.until(
+                    ExpectedConditions.elementToBeClickable(By.linkText(pageName))
+            );
+            pageLink.click();
+        }
+    }
+
 
 
 }
