@@ -59,8 +59,11 @@ public class StoreListPage {
     public boolean isStoreDisplayedById(String storeId) {
         List<WebElement> rows = driver.findElements(storeList);
         for (WebElement row : rows) {
-            String currentStoreId = row.findElement(By.xpath(".//td[1]")).getAttribute("data-store-id"); // <--- Problematic line?
-            if (currentStoreId.equals(storeId)) {
+            // Get the store ID from the attribute
+            String currentStoreId = row.getAttribute("data-store-id"); // Adjusted to use the row directly
+
+            // Check if the store ID matches, ensure currentStoreId is not null
+            if (currentStoreId != null && currentStoreId.equals(storeId)) {
                 return true;
             }
         }
