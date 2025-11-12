@@ -7,6 +7,7 @@ public class AllPages {
     private DashboardPage dashboardPage;
     private UsersPage usersPage;
     private StoresPage storesPage;
+    private BrowseProductPage productPage;
 
 
 
@@ -42,6 +43,13 @@ public class AllPages {
     public StoresPage getStoresPage() {
         if (storesPage == null) storesPage = new StoresPage();
         return storesPage;
+    }
+
+    public BrowseProductPage getProductPage() {
+        if (productPage == null) {
+            productPage = new BrowseProductPage();
+        }
+        return productPage;
     }
 
 }

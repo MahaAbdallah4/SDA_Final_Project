@@ -24,6 +24,9 @@ public class DashboardPage extends BasePage {
     private final By productsLink = By.cssSelector("a[href*='products'], button:contains('Products')");
     private final By logoutButton = By.cssSelector("button:contains('Logout'), a:contains('Logout')");
     private final By userName = By.cssSelector(".user-name, [class*='username']");
+    private final By profileIcon = By.className("profile-icon");
+    private final By clickLogout = By.className("logout");
+
     private final By toastNotification = By.xpath("//div[contains(@class, 'toastify')]");    private final By tooltipMessage = By.cssSelector(".tooltip-message");
     private final By addStoreButton = By.cssSelector("button.btn.btn-outline-primary.no-hover.float-start.float-lg-end");
     private final By storeNameInput = By.id("first-name-column");
@@ -59,6 +62,13 @@ public class DashboardPage extends BasePage {
     public LoginPage clickLogout() {
         click(logoutButton);
         return new LoginPage();
+    }
+
+    public void clickProfileIcon() {
+        click(profileIcon);
+    }
+    public void clickLogoutButton() {
+        click(clickLogout);
     }
 
     // Verification Methods
