@@ -7,7 +7,7 @@ public class AllPages {
     private DashboardPage dashboardPage;
     private UsersPage usersPage;
     private StoresPage storesPage;
-    private ProductPage productPage;
+    private BrowseProductPage productPage;
 
 
 
@@ -45,9 +45,9 @@ public class AllPages {
         return storesPage;
     }
 
-    public ProductPage getProductPage() {
+    public BrowseProductPage getProductPage() {
         if (productPage == null) {
-            productPage = new ProductPage();
+            productPage = new BrowseProductPage();
         }
         return productPage;
     }
