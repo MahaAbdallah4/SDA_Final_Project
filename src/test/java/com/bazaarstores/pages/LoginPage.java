@@ -1,6 +1,8 @@
 package com.bazaarstores.pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 public class LoginPage extends BasePage {
 
@@ -59,6 +61,10 @@ public class LoginPage extends BasePage {
 
     public String getSuccessMessageText() {
         return getText(successMessage);
+    }
+
+    public WebElement getEmailInput(WebDriver driver) {
+        return driver.findElement(emailInput);
     }
 
     public boolean isValidationMessageDisplayed(String fieldName) {
