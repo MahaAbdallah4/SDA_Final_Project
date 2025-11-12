@@ -2,20 +2,29 @@ package com.bazaarstores.stepDefinitions;
 
 
 import com.bazaarstores.pages.AllPages;
+import com.bazaarstores.pages.DashboardPage;
 import com.bazaarstores.utilities.ApiUtil;
 import com.bazaarstores.utilities.ConfigReader;
 import com.bazaarstores.utilities.Driver;
-import io.cucumber.java.PendingException;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.response.Response;
 import org.junit.Assert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import java.time.Duration;
 
 
 public class LoginSteps {
 
     AllPages allPages = new AllPages();
+
+    private DashboardPage dashboardPage;
+
 
     @When("user enters valid customer credentials")
     public void user_enters_valid_customer_credentials() {
@@ -52,6 +61,19 @@ public class LoginSteps {
     public void user_should_see_error_message() {
         Assert.assertTrue("Error message should be displayed",
                 allPages.getLoginPage().isErrorMessageDisplayed());
+    }
+
+    @Then("^user should see error message \"([^\"]*)\"$")
+    public void user_should_see_error_message(String expectedErrorMessage) {
+        WebElement emailInput = Driver.getDriver().findElement(By.name("email")); // Adjust the locator as needed
+        WebElement submitButton = Driver.getDriver().findElement(By.cssSelector("button[type='submit']"));
+        submitButton.click();
+        WebDriverWait wait = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.attributeToBe(emailInput, "validationMessage", expectedErrorMessage));
+        JavascriptExecutor js = (JavascriptExecutor) Driver.getDriver();
+        String actualErrorMessage = (String) js.executeScript("return arguments[0].validationMessage;", emailInput);
+        System.out.println("Actual validation message: " + actualErrorMessage);
+        Assert.assertEquals(expectedErrorMessage, actualErrorMessage);
     }
 
     @Then("user should remain on login page")
