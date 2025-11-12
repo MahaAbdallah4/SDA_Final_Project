@@ -261,6 +261,7 @@ public class ProductSteps {
         response.then().statusCode(200);
         System.out.println("API endpoint is active: " + endpoint);
     }
+
     @When("user adds product ID {int} to favorites for user ID {int}")
     public void userAddsProductToFavorites(int productId, int userId) {
         response = given()
@@ -302,9 +303,6 @@ public class ProductSteps {
         Assert.assertTrue("Product '" + productName + "' not found in API response!", found);
         System.out.println("Product is present in API response: " + productName);
     }
-
-
-
 
 
     @And("removal of the product {string} should update the favorites list correctly for user ID {int}")
@@ -389,7 +387,8 @@ public class ProductSteps {
 
                 } catch (StaleElementReferenceException | ElementClickInterceptedException | TimeoutException e) {
                     System.out.println("Retrying " + productName + " due to: " + e.getMessage());
-                } catch (InterruptedException ignored) {}
+                } catch (InterruptedException ignored) {
+                }
 
                 attempts++;
             }
@@ -399,191 +398,185 @@ public class ProductSteps {
     }
 
 
-
-
-
-
-
     @Then("all added products should appear with correct prices")
-                public void allAddedProductsShouldAppearWithCorrectPrices (io.cucumber.datatable.DataTable dataTable) throws
-                InterruptedException {
+    public void allAddedProductsShouldAppearWithCorrectPrices(io.cucumber.datatable.DataTable dataTable) throws
+            InterruptedException {
 
-                    productPage.hoverOverCartIcon();
-                    Thread.sleep(1500);
-                    List<Map<String, String>> expectedProducts = dataTable.asMaps(String.class, String.class);
+        productPage.hoverOverCartIcon();
+        Thread.sleep(1500);
+        List<Map<String, String>> expectedProducts = dataTable.asMaps(String.class, String.class);
 
-                    for (Map<String, String> expected : expectedProducts) {
-                        String productName = expected.get("Product Name");
-                        String expectedPrice = expected.get("Price");
+        for (Map<String, String> expected : expectedProducts) {
+            String productName = expected.get("Product Name");
+            String expectedPrice = expected.get("Price");
 
-                        // get actual price from cart and remove any "Price:" prefix
-                        String actualPrice = productPage.getProductPriceFromCart(productName);
-                        if (actualPrice.toLowerCase().startsWith("price:")) {
-                            actualPrice = actualPrice.substring(6).trim(); // remove "Price:" and trim
-                        }
+            // get actual price from cart and remove any "Price:" prefix
+            String actualPrice = productPage.getProductPriceFromCart(productName);
+            if (actualPrice.toLowerCase().startsWith("price:")) {
+                actualPrice = actualPrice.substring(6).trim(); // remove "Price:" and trim
+            }
 
-                        Assert.assertTrue("Product name " + productName + " not found in cart!",
-                                productPage.isProductInCart(productName));
-                        Assert.assertEquals("Price mismatch for product " + productName, expectedPrice, actualPrice);
-                    }
-                }
-
-
-                @Then("the total price should be accurate")
-                public void theTotalPriceShouldBeAccurate () {
-                    // Hover over cart icon to reveal subtotal
-                    productPage.hoverOverCartIcon();
-
-                    // Get subtotal amount (second span inside cart-subtotal)
-                    By subtotalLocator = By.cssSelector("div.cart-subtotal span:last-child");
-                    String subtotalText = productPage.getText(subtotalLocator).replace("Price:", "").trim();
-
-                    // Compute expected total from products in cart
-                    double expectedTotal = 0.0;
-                    List<String> products = productPage.getAllCartProductNames();
-                    for (String product : products) {
-                        String priceText = productPage.getProductPriceFromCart(product).replace("Price:", "").replace("$", "").trim();
-                        expectedTotal += Double.parseDouble(priceText);
-                    }
-
-                    String expectedTotalStr = "$" + String.format("%.2f", expectedTotal);
-
-                    Assert.assertEquals("Cart total is invalid or missing!", expectedTotalStr, subtotalText);
-                }
+            Assert.assertTrue("Product name " + productName + " not found in cart!",
+                    productPage.isProductInCart(productName));
+            Assert.assertEquals("Price mismatch for product " + productName, expectedPrice, actualPrice);
+        }
+    }
 
 
-                // ------------------ REMOVE PRODUCT ------------------
+    @Then("the total price should be accurate")
+    public void theTotalPriceShouldBeAccurate() {
+        // Hover over cart icon to reveal subtotal
+        productPage.hoverOverCartIcon();
+
+        // Get subtotal amount (second span inside cart-subtotal)
+        By subtotalLocator = By.cssSelector("div.cart-subtotal span:last-child");
+        String subtotalText = productPage.getText(subtotalLocator).replace("Price:", "").trim();
+
+        // Compute expected total from products in cart
+        double expectedTotal = 0.0;
+        List<String> products = productPage.getAllCartProductNames();
+        for (String product : products) {
+            String priceText = productPage.getProductPriceFromCart(product).replace("Price:", "").replace("$", "").trim();
+            expectedTotal += Double.parseDouble(priceText);
+        }
+
+        String expectedTotalStr = "$" + String.format("%.2f", expectedTotal);
+
+        Assert.assertEquals("Cart total is invalid or missing!", expectedTotalStr, subtotalText);
+    }
 
 
-                @When("user clicks Remove on the product {string}")
-                public void userClicksRemoveOnTheProduct (String productName){
-                    int attempts = 0;
-                    boolean clicked = false;
-                    productPage.hoverOverCartIcon();
-                    while (attempts < 5 && !clicked) {
-                        try {
-                            // Find the cart item container for this product
-                            By cartItem = By.xpath("//div[contains(@class,'cart-item')]//*[normalize-space(text())='"
-                                    + productName + "']/ancestor::div[contains(@class,'cart-item')]");
-
-                            WebElement item = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(5))
-                                    .until(ExpectedConditions.visibilityOfElementLocated(cartItem));
-
-                            // Find the remove button inside this container
-                            WebElement removeBtn = item.findElement(By.cssSelector("button.remove-item"));
-
-                            // Scroll and click
-                            ((JavascriptExecutor) Driver.getDriver())
-                                    .executeScript("arguments[0].scrollIntoView(true);", removeBtn);
-                            removeBtn.click();
-
-                            clicked = true;
-
-                            // wait briefly for DOM to update
-                            Thread.sleep(500);
-
-                        } catch (StaleElementReferenceException | TimeoutException e) {
-                            attempts++;
-                        } catch (InterruptedException ignored) {
-                        }
-                    }
-
-                    if (!clicked) {
-                        Assert.fail("Failed to click Remove button for product: " + productName);
-                    }
-                }
+    // ------------------ REMOVE PRODUCT ------------------
 
 
-                @Then("the product {string} should be removed from the cart")
-                public void theProductShouldBeRemovedfromthecart (String productName){
-                    // Retry a few times if DOM is slow
-                    boolean removed = false;
-                    int attempts = 0;
-                    while (attempts < 5) {
-                        if (!productPage.isProductInCart(productName)) {
-                            removed = true;
-                            break;
-                        }
-                        attempts++;
-                        try {
-                            Thread.sleep(300);
-                        } catch (InterruptedException ignored) {
-                        }
-                    }
-                    Assert.assertTrue("Product still found in cart after removal!", removed);
-                }
+    @When("user clicks Remove on the product {string}")
+    public void userClicksRemoveOnTheProduct(String productName) {
+        int attempts = 0;
+        boolean clicked = false;
+        productPage.hoverOverCartIcon();
+        while (attempts < 5 && !clicked) {
+            try {
+                // Find the cart item container for this product
+                By cartItem = By.xpath("//div[contains(@class,'cart-item')]//*[normalize-space(text())='"
+                        + productName + "']/ancestor::div[contains(@class,'cart-item')]");
+
+                WebElement item = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(5))
+                        .until(ExpectedConditions.visibilityOfElementLocated(cartItem));
+
+                // Find the remove button inside this container
+                WebElement removeBtn = item.findElement(By.cssSelector("button.remove-item"));
+
+                // Scroll and click
+                ((JavascriptExecutor) Driver.getDriver())
+                        .executeScript("arguments[0].scrollIntoView(true);", removeBtn);
+                removeBtn.click();
+
+                clicked = true;
+
+                // wait briefly for DOM to update
+                Thread.sleep(500);
+
+            } catch (StaleElementReferenceException | TimeoutException e) {
+                attempts++;
+            } catch (InterruptedException ignored) {
+            }
+        }
+
+        if (!clicked) {
+            Assert.fail("Failed to click Remove button for product: " + productName);
+        }
+    }
 
 
-                @And("the total price should update instantly")
-                public void theTotalPriceShouldUpdateInstantly () {
-                    // Hover over cart to make subtotal visible
-                    productPage.hoverOverCartIcon();
-
-                    // Retry mechanism to handle DOM updates after removal
-                    String subtotalText = "";
-                    int attempts = 0;
-                    while (attempts < 5) {
-                        if (productPage.isCartSubtotalDisplayed()) {
-                            subtotalText = productPage.getCartSubtotal().replace("Price:", "").trim();
-                            break;
-                        }
-                        attempts++;
-                        try {
-                            Thread.sleep(300);
-                        } catch (InterruptedException ignored) {
-                        }
-                    }
-
-                    if (subtotalText.isEmpty()) {
-                        Assert.fail("Cart subtotal is missing or not visible!");
-                    }
-
-                    // Recalculate expected total from current cart products
-                    List<String> products = productPage.getAllCartProductNames();
-                    double expectedTotal = 0.0;
-
-                    for (String product : products) {
-                        // Ensure we fetch the latest price from the cart after removal
-                        String priceText = productPage.getProductPriceFromCart(product)
-                                .replace("Price:", "")
-                                .replace("$", "")
-                                .trim();
-                        expectedTotal += Double.parseDouble(priceText);
-                    }
-
-                    String expectedTotalStr = "$" + String.format("%.2f", expectedTotal);
-
-                    // Compare actual subtotal vs recalculated total
-                    Assert.assertEquals("Cart subtotal did not update correctly after removal!", expectedTotalStr, subtotalText);
-                }
+    @Then("the product {string} should be removed from the cart")
+    public void theProductShouldBeRemovedfromthecart(String productName) {
+        // Retry a few times if DOM is slow
+        boolean removed = false;
+        int attempts = 0;
+        while (attempts < 5) {
+            if (!productPage.isProductInCart(productName)) {
+                removed = true;
+                break;
+            }
+            attempts++;
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException ignored) {
+            }
+        }
+        Assert.assertTrue("Product still found in cart after removal!", removed);
+    }
 
 
-                // ------------------ EMPTY CART ------------------
-                @Given("the user has no products added to the cart")
-                public void theUserHasNoProductsAddedToTheCart () {
-                    productPage.hoverOverCartIcon();
-                    productPage.clearAllCartItems();
-                    Assert.assertEquals("Cart is not empty!", 0, productPage.getCartCount());
-                }
+    @And("the total price should update instantly")
+    public void theTotalPriceShouldUpdateInstantly() {
+        // Hover over cart to make subtotal visible
+        productPage.hoverOverCartIcon();
 
-                @When("user goes to the Cart icon")
-                public void userGoesToTheCartIcon () {
-                  productPage.hoverOverCartIcon();
-                }
+        // Retry mechanism to handle DOM updates after removal
+        String subtotalText = "";
+        int attempts = 0;
+        while (attempts < 5) {
+            if (productPage.isCartSubtotalDisplayed()) {
+                subtotalText = productPage.getCartSubtotal().replace("Price:", "").trim();
+                break;
+            }
+            attempts++;
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException ignored) {
+            }
+        }
 
-                @Then("the page should display “Your cart is empty”")
-                public void thePageShouldDisplayYourCartIsEmpty () {
+        if (subtotalText.isEmpty()) {
+            Assert.fail("Cart subtotal is missing or not visible!");
+        }
+
+        // Recalculate expected total from current cart products
+        List<String> products = productPage.getAllCartProductNames();
+        double expectedTotal = 0.0;
+
+        for (String product : products) {
+            // Ensure we fetch the latest price from the cart after removal
+            String priceText = productPage.getProductPriceFromCart(product)
+                    .replace("Price:", "")
+                    .replace("$", "")
+                    .trim();
+            expectedTotal += Double.parseDouble(priceText);
+        }
+
+        String expectedTotalStr = "$" + String.format("%.2f", expectedTotal);
+
+        // Compare actual subtotal vs recalculated total
+        Assert.assertEquals("Cart subtotal did not update correctly after removal!", expectedTotalStr, subtotalText);
+    }
 
 
-                      Assert.assertTrue(
-                            "Empty cart message not displayed!",
-                            productPage.isElementDisplayed(productPage.byXpathContainsText("Your cart is empty"))
-                    );
-                }
+    // ------------------ EMPTY CART ------------------
+    @Given("the user has no products added to the cart")
+    public void theUserHasNoProductsAddedToTheCart() {
+        productPage.hoverOverCartIcon();
+        productPage.clearAllCartItems();
+        Assert.assertEquals("Cart is not empty!", 0, productPage.getCartCount());
+    }
+
+    @When("user goes to the Cart icon")
+    public void userGoesToTheCartIcon() {
+        productPage.hoverOverCartIcon();
+    }
+
+    @Then("the page should display “Your cart is empty”")
+    public void thePageShouldDisplayYourCartIsEmpty() {
+
+
+        Assert.assertTrue(
+                "Empty cart message not displayed!",
+                productPage.isElementDisplayed(productPage.byXpathContainsText("Your cart is empty"))
+        );
+    }
 
 
     //==================================US09========================
-
 
 
     @When("user clicks “Confirm Cart”")
@@ -648,9 +641,5 @@ public class ProductSteps {
         System.out.println(" API response status: confirmed");
 
     }
-
-
-
-
-            }
+}
 
