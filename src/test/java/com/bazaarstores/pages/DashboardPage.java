@@ -3,11 +3,8 @@ package com.bazaarstores.pages;
 import com.bazaarstores.utilities.Driver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
@@ -24,7 +21,8 @@ public class DashboardPage extends BasePage {
     private final By productsLink = By.cssSelector("a[href*='products'], button:contains('Products')");
     private final By logoutButton = By.cssSelector("button:contains('Logout'), a:contains('Logout')");
     private final By userName = By.cssSelector(".user-name, [class*='username']");
-    private final By toastNotification = By.xpath("//div[contains(@class, 'toastify')]");    private final By tooltipMessage = By.cssSelector(".tooltip-message");
+    private final By toastNotification = By.xpath("//div[contains(@class, 'toastify')]");
+    private final By tooltipMessage = By.cssSelector(".tooltip-message");
     private final By addStoreButton = By.cssSelector("button.btn.btn-outline-primary.no-hover.float-start.float-lg-end");
     private final By storeNameInput = By.id("first-name-column");
     private final By iframeLocator = By.id("default_ifr"); // ID of the TinyMCE iframe
@@ -157,6 +155,7 @@ public class DashboardPage extends BasePage {
         Select adminSelect = new Select(Driver.getDriver().findElement(storeAdminsInput));
         adminSelect.selectByVisibleText(admins);
     }
+
     // Navigation Methods
     public void navigateToStores() {
         click(storesLink);
@@ -178,25 +177,6 @@ public class DashboardPage extends BasePage {
     public String getUpdatedStoreAdmins() {
         return getText(updatedStoreAdmins);
     }
-
-
-}
-    public void navigateToPage(String pageName) {
-        WebDriverWait wait = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10));
-
-        if (pageName.equalsIgnoreCase("Users")) {
-            WebElement usersMenu = wait.until(
-                    ExpectedConditions.elementToBeClickable(By.xpath("//span[normalize-space()='Users']"))
-            );
-            usersMenu.click();
-        } else {
-            WebElement pageLink = wait.until(
-                    ExpectedConditions.elementToBeClickable(By.linkText(pageName))
-            );
-            pageLink.click();
-        }
-    }
-
 
 
 }
