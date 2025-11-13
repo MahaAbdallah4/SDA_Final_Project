@@ -1,5 +1,6 @@
 package com.bazaarstores.pages;
 
+import com.bazaarstores.utilities.Driver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -182,5 +183,4 @@ public class DashboardPage extends BasePage {
     }
 
 
-}
 }
