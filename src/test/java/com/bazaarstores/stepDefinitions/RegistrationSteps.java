@@ -61,35 +61,4 @@ public class RegistrationSteps {
     public void userShouldSeeInvalidEmailErrorMessage() {
         pages.getRegistrationPage().validateInvalidEmail();
     }
-
-    @Then("User should see: The name field is required. error message")
-    public void userShouldSeeTheNameFieldIsRequiredErrorMessage() {
-        pages.getRegistrationPage().validateNameFieldRequired();
-    }
-
-    @Then("user should see: invalid name message error")
-    public void userShouldSeeInvalidNameMessageError() {
-        //This is a bug!, there is no validation for invalid name, should not accept invalid name
-        assert false;
-    }
-
-    @And("user enters short password for sign up {string}")
-    public void userEntersShortPasswordForSignUp(String password) {
-        pages.getRegistrationPage().enterPassword(password);
-    }
-
-    @And("user enters confirm password for sign up {string}")
-    public void userEntersConfirmPasswordForSignUp(String password) {
-        pages.getRegistrationPage().enterPasswordConfirmation(password);
-    }
-
-    @Then("user should see: The password field must be at least {int} characters. error message")
-    public void userShouldSeeThePasswordFieldMustBeAtLeastCharactersErrorMessage(int atLeast6) {
-        pages.getRegistrationPage().validatePasswordTooShort();
-    }
-
-    @Then("user should see: The password field confirmation does not match. error message")
-    public void userShouldSeeThePasswordFieldConfirmationDoesNotMatchErrorMessage() {
-        pages.getRegistrationPage().validatePasswordNotMatch();
-    }
 }

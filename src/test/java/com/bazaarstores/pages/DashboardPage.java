@@ -3,14 +3,15 @@ package com.bazaarstores.pages;
 import com.bazaarstores.utilities.Driver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
-import org.openqa.selenium.WebDriver;
 
 public class DashboardPage extends BasePage {
+
 
     // By Locators
     private final By dashboard = By.xpath("//div[@class='products-grid']");
@@ -21,8 +22,7 @@ public class DashboardPage extends BasePage {
     private final By productsLink = By.cssSelector("a[href*='products'], button:contains('Products')");
     private final By logoutButton = By.cssSelector("button:contains('Logout'), a:contains('Logout')");
     private final By userName = By.cssSelector(".user-name, [class*='username']");
-    private final By toastNotification = By.xpath("//div[contains(@class, 'toastify')]");
-    private final By tooltipMessage = By.cssSelector(".tooltip-message");
+    private final By toastNotification = By.xpath("//div[contains(@class, 'toastify')]");    private final By tooltipMessage = By.cssSelector(".tooltip-message");
     private final By addStoreButton = By.cssSelector("button.btn.btn-outline-primary.no-hover.float-start.float-lg-end");
     private final By storeNameInput = By.id("first-name-column");
     private final By iframeLocator = By.id("default_ifr"); // ID of the TinyMCE iframe
@@ -41,10 +41,6 @@ public class DashboardPage extends BasePage {
     private final By updatedStoreLocation = By.xpath("//table[@id='stores-table']//td[contains(@class, 'store-location')]");
     private final By updatedStoreAdmins = By.xpath("//table[@id='stores-table']//td[contains(@class, 'store-admins')]");
 
-    public DashboardPage(WebDriver driver) {
-        super(driver);
-    }
-
     // Navigation Methods
     public void clickProfileLink() {
         click(profileLink);
@@ -60,7 +56,7 @@ public class DashboardPage extends BasePage {
 
     public LoginPage clickLogout() {
         click(logoutButton);
-        return new LoginPage(driver);
+        return new LoginPage();
     }
 
     // Verification Methods
@@ -159,7 +155,6 @@ public class DashboardPage extends BasePage {
         Select adminSelect = new Select(Driver.getDriver().findElement(storeAdminsInput));
         adminSelect.selectByVisibleText(admins);
     }
-
     // Navigation Methods
     public void navigateToStores() {
         click(storesLink);
