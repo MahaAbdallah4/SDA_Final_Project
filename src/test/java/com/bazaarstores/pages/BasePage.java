@@ -1,7 +1,6 @@
 package com.bazaarstores.pages;
 
 import com.bazaarstores.utilities.ConfigReader;
-import com.bazaarstores.utilities.Driver;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -12,23 +11,23 @@ import java.time.Duration;
 import java.util.List;
 
 public abstract class BasePage {
-
+    protected WebDriver driver;
     protected WebDriverWait wait;
     protected Actions actions;
 
-    public BasePage() {
-
-        this.wait = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(ConfigReader.getExplicitWait()));
-        this.actions = new Actions(Driver.getDriver());
+    public BasePage(WebDriver driver) {
+        this.driver = driver;
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(ConfigReader.getExplicitWait()));
+        this.actions = new Actions(driver);
     }
 
     // Helper method to find element
     protected WebElement findElement(By locator) {
-        return Driver.getDriver().findElement(locator);
+        return driver.findElement(locator);
     }
 
     protected List<WebElement> findElements(By locator) {
-        return Driver.getDriver().findElements(locator);
+        return driver.findElements(locator);
     }
 
     // Click Methods
@@ -38,7 +37,7 @@ public abstract class BasePage {
     }
 
     public void clickWithJS(By locator) {
-        JavascriptExecutor js = (JavascriptExecutor) Driver.getDriver();
+        JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].click();", findElement(locator));
     }
 
@@ -51,12 +50,15 @@ public abstract class BasePage {
     }
 
     public void sendKeysWithJS(By locator, String text) {
-        JavascriptExecutor js = (JavascriptExecutor) Driver.getDriver();
+        JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].value='" + text + "';", findElement(locator));
     }
 
     // Wait Methods
-    public void waitForElementToBeVisible(By locator) { wait.until(ExpectedConditions.visibilityOfElementLocated(locator)); }
+    public void waitForElementToBeVisible(By locator) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+
     public void waitForElementToBeClickable(By locator) {
         wait.until(ExpectedConditions.elementToBeClickable(locator));
     }
@@ -158,88 +160,79 @@ public abstract class BasePage {
 
     // JavaScript Methods
     public void scrollToElement(By locator) {
-        JavascriptExecutor js = (JavascriptExecutor) Driver.getDriver();
+        JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].scrollIntoView(true);", findElement(locator));
     }
 
     public void scrollToBottom() {
-        JavascriptExecutor js = (JavascriptExecutor) Driver.getDriver();
+        JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
     }
 
     public void scrollToTop() {
-        JavascriptExecutor js = (JavascriptExecutor) Driver.getDriver();
+        JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("window.scrollTo(0, 0)");
     }
 
     // Alert Methods
     public void acceptAlert() {
         wait.until(ExpectedConditions.alertIsPresent());
-        Driver.getDriver().switchTo().alert().accept();
+        driver.switchTo().alert().accept();
     }
 
     public void dismissAlert() {
         wait.until(ExpectedConditions.alertIsPresent());
-        Driver.getDriver().switchTo().alert().dismiss();
+        driver.switchTo().alert().dismiss();
     }
 
     public String getAlertText() {
         wait.until(ExpectedConditions.alertIsPresent());
-        return Driver.getDriver().switchTo().alert().getText();
+        return driver.switchTo().alert().getText();
     }
 
     // Window Methods
     public void switchToWindow(int windowIndex) {
-        List<String> windows = Driver.getDriver().getWindowHandles().stream().toList();
-        Driver.getDriver().switchTo().window(windows.get(windowIndex));
+        List<String> windows = driver.getWindowHandles().stream().toList();
+        driver.switchTo().window(windows.get(windowIndex));
     }
-    // Type Methods
-    public void clearAndType(By locator, String text) {
-        waitForElementToBeVisible(locator);
-        WebElement element = findElement(locator);
-        element.clear();
-        element.sendKeys(text);
-    }
-
 
     public void switchToFrame(By frameLocator) {
-        Driver.getDriver().switchTo().frame(findElement(frameLocator));
+        driver.switchTo().frame(findElement(frameLocator));
     }
 
     public void switchToDefaultContent() {
-        Driver.getDriver().switchTo().defaultContent();
+        driver.switchTo().defaultContent();
     }
 
     // Navigation Methods
     public void navigateToUrl(String url) {
-        Driver.getDriver().navigate().to(url);
+        driver.navigate().to(url);
     }
 
     public void refreshPage() {
-        Driver.getDriver().navigate().refresh();
+        driver.navigate().refresh();
     }
 
     public void navigateBack() {
-        Driver.getDriver().navigate().back();
+        driver.navigate().back();
     }
 
     public void navigateForward() {
-        Driver.getDriver().navigate().forward();
+        driver.navigate().forward();
     }
 
     // Screenshot Method
     public byte[] takeScreenshot() {
-        return ((TakesScreenshot) Driver.getDriver()).getScreenshotAs(OutputType.BYTES);
+        return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
     }
 
-
-    public By byXpathContainsText(String text) {
-        return By.xpath("//*[contains(normalize-space(text()),'" + text + "')]");
+        // Custom wait method to pause for a few seconds
+        public void waitFor(int seconds) {
+            try {
+                Thread.sleep(seconds * 1000L);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                System.out.println("Wait interrupted: " + e.getMessage());
+            }
+        }
     }
-    // Case-insensitive XPath
-    public By byXpathContainsTextIgnoreCase(String text) {
-        return By.xpath("//*[contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'"
-                + text.toLowerCase() + "')]");
-    }
-
-}
