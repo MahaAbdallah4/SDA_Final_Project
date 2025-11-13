@@ -34,12 +34,25 @@ public class DashboardPage extends BasePage {
     private final By errorMessage = By.xpath("//ul/li[contains(text(), 'The name field is required.') or contains(text(), 'The location field is required.')]");
     private final By storesLink = By.cssSelector("a.sidebar-link[href='https://bazaarstores.com/stores']");
     private final By errorUpdatedMessage = By.xpath("//div[@class='alert alert-danger']//ul/li[contains(text(), 'The name field is required.') or contains(text(), 'The location field is required.') or contains(text(), 'The description field is required.')]");
+    private final By profileIcon = By.className("profile-icon");
+    private final By clickLogout = By.className("logout");
 
     // Additional locators for retrieving updated store details
     private final By updatedStoreName = By.xpath("//table[@id='stores-table']//td[contains(@class, 'store-name')]");
     private final By updatedStoreDescription = By.xpath("//table[@id='stores-table']//td[contains(@class, 'store-description')]");
     private final By updatedStoreLocation = By.xpath("//table[@id='stores-table']//td[contains(@class, 'store-location')]");
     private final By updatedStoreAdmins = By.xpath("//table[@id='stores-table']//td[contains(@class, 'store-admins')]");
+
+    public DashboardPage(WebDriver driver) {
+        super(driver);
+    }
+
+    public void clickProfileIcon() {
+        click(profileIcon);
+    }
+    public void clickLogoutButton() {
+        click(clickLogout);
+    }
 
     // Navigation Methods
     public void clickProfileLink() {
