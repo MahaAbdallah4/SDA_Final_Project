@@ -1,4 +1,3 @@
-
 # Java compiled files
 *.class
 *.jar
@@ -60,8 +59,8 @@ jenkins.log
 
 # Configuration files with sensitive data (if you have environment-specific configs)
 # Uncomment if needed:
- src/test/resources/config.properties
- src/test/resources/credentials.properties
+# src/test/resources/config.properties
+# src/test/resources/credentials.properties
 
 # Keep this commented unless you want to ignore the main config
 # configurations.properties should be tracked in git for test data
@@ -89,4 +88,3 @@ gradlew.bat
 *.pid
 hs_err_pid*
 replay_pid*
->>>>>>> 632289faf7a2a06f25c45fd6b186bb8a3219ecb4

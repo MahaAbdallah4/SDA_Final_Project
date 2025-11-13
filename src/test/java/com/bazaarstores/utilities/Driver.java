@@ -52,6 +52,7 @@ public class Driver {
             driver.get().manage().timeouts()
                 .pageLoadTimeout(Duration.ofSeconds(ConfigReader.getPageLoadTimeout()));
             driver.get().manage().window().maximize();
+            driver.get().get("https://bazaarstores.com");
         }
         return driver.get();
     }

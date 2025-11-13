@@ -1,6 +1,5 @@
 package com.bazaarstores.pages;
 
-import com.bazaarstores.utilities.Driver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -8,12 +7,12 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import org.openqa.selenium.WebDriver;
 
 public class DashboardPage extends BasePage {
 
-
     // By Locators
-    private final By dashboard = By.xpath("//span[normalize-space()='Dashboard']");
+    private final By dashboard = By.xpath("//div[@class='products-grid']");
     private final By profileVisitChart = By.xpath("//div[@class='card-body']");
     private final By welcomeMessage = By.cssSelector(".welcome-message, [class*='welcome']");
     private final By profileLink = By.cssSelector("a[href*='profile'], button:contains('Profile')");
@@ -41,6 +40,10 @@ public class DashboardPage extends BasePage {
     private final By updatedStoreLocation = By.xpath("//table[@id='stores-table']//td[contains(@class, 'store-location')]");
     private final By updatedStoreAdmins = By.xpath("//table[@id='stores-table']//td[contains(@class, 'store-admins')]");
 
+    public DashboardPage(WebDriver driver) {
+        super(driver);
+    }
+
     // Navigation Methods
     public void clickProfileLink() {
         click(profileLink);
@@ -56,7 +59,7 @@ public class DashboardPage extends BasePage {
 
     public LoginPage clickLogout() {
         click(logoutButton);
-        return new LoginPage();
+        return new LoginPage(driver);
     }
 
     // Verification Methods
@@ -179,4 +182,5 @@ public class DashboardPage extends BasePage {
     }
 
 
+}
 }

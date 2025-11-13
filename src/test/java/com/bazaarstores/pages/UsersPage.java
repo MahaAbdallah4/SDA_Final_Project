@@ -1,54 +1,41 @@
 package com.bazaarstores.pages;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
-import com.bazaarstores.utilities.Driver;
+import org.openqa.selenium.WebDriver;
 
-public class UsersPage {
+public class UsersPage extends BasePage {
 
-    public UsersPage() {
-        PageFactory.initElements(Driver.getDriver(), this);
+    private final By usersMenu = By.xpath("//span[text()='Users']");
+    private final By searchInput = By.xpath("//input[@name='email']");
+    private final By searchButton = By.xpath("//button[text()='Search']");
+    private final By noUserMessage = By.xpath("//*[contains(text(),'No users found')]");
+    private final By usersTableRows = By.xpath("//table//tbody//tr");
+
+    public UsersPage(WebDriver driver) {
+        super(driver);
     }
 
-    @FindBy(xpath = "//a[@href='https://bazaarstores.com/users/create']")
-    public WebElement addUserButton;
-
-    public void clickAddUser() {
-        addUserButton.click();
+    public void clickUsersMenu() {
+        click(usersMenu);
+        waitFor(1);
     }
 
-
-    @FindBy(id = "first-name-column")
-    public WebElement nameInput;
-
-    @FindBy(id = "email-id-column")
-    public WebElement emailInput;
-
-    @FindBy(id = "role-id-column")
-    public WebElement roleSelect;
-
-    @FindBy(id = "password-id-column")
-    public WebElement passwordInput;
-
-    @FindBy(xpath = "//button[contains(text(),'Submit')]")
-    public WebElement submitButton;
-
-    @FindBy(xpath = "//button[contains(@onclick,'confirmDelete')]")
-    public WebElement deleteButton;
-
-    public void fillUserForm(String name, String email, String role, String password) {
-        nameInput.clear();
-        nameInput.sendKeys(name);
-        emailInput.clear();
-        emailInput.sendKeys(email);
-        roleSelect.sendKeys(role);
-        passwordInput.clear();
-        passwordInput.sendKeys(password);
+    public void searchUserByEmail(String email) {
+        sendKeys(searchInput, email);
+        click(searchButton);
+        waitFor(1);
     }
 
-    public void clickSubmit() {
-        submitButton.click();
+    public boolean isUserDisplayed(String email) {
+        return findElements(usersTableRows).stream()
+                .anyMatch(row -> row.getText().contains(email));
+    }
+
+    public boolean isNoUserMessageDisplayed() {
+        return isDisplayed(noUserMessage);
+    }
+
+    public int getUsersCount() {
+        return findElements(usersTableRows).size();
     }
 }

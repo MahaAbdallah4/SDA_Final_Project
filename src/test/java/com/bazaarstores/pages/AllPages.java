@@ -1,47 +1,69 @@
 package com.bazaarstores.pages;
 
-public class AllPages {
+import org.openqa.selenium.WebDriver;
 
+public class AllPages {
+    private WebDriver driver;
+    
     private LoginPage loginPage;
     private RegistrationPage registrationPage;
     private DashboardPage dashboardPage;
-    private UsersPage usersPage;
-    private StoresPage storesPage;
+    private AddProductPage addProductPage;
+    private ProductsPage productsPage;
+    private DeleteProductPage deleteProductPage;
+    private UsersPage UsersPage;
 
-
+    public AllPages(WebDriver driver) {
+        this.driver = driver;
+    }
 
     public LoginPage getLoginPage() {
         if (loginPage == null) {
-            loginPage = new LoginPage();
+            loginPage = new LoginPage(driver);
+
         }
         return loginPage;
     }
 
     public RegistrationPage getRegistrationPage() {
         if (registrationPage == null) {
-            registrationPage = new RegistrationPage();
+            registrationPage = new RegistrationPage(driver);
         }
         return registrationPage;
     }
 
     public DashboardPage getDashboardPage() {
         if (dashboardPage == null) {
-            dashboardPage = new DashboardPage();
+            dashboardPage = new DashboardPage(driver);
         }
         return dashboardPage;
     }
-
-    public UsersPage getUsersPage() {
-
-        if (usersPage == null){
-            usersPage = new UsersPage();
+    public AddProductPage getAddProductPage() {
+        if (addProductPage == null) {
+            addProductPage = new AddProductPage(driver);
         }
-        return usersPage;
+        return addProductPage;
+    }
+    public ProductsPage getProductsPage(){
+        if (productsPage == null){
+            productsPage = new ProductsPage(driver);
+        }
+        return productsPage;
     }
 
-    public StoresPage getStoresPage() {
-        if (storesPage == null) storesPage = new StoresPage();
-        return storesPage;
+    public DeleteProductPage getDeleteProductPage() {
+        if (deleteProductPage == null) {
+            deleteProductPage = new DeleteProductPage(driver);
+        }
+        return deleteProductPage;
     }
+    public  UsersPage getUsersPage(){
+        if (UsersPage == null){
+            UsersPage = new UsersPage( driver);
+        }
+        return UsersPage;
+    }
+
 
 }
+
