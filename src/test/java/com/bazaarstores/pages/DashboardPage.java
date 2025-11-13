@@ -189,8 +189,6 @@ public class DashboardPage extends BasePage {
         return getText(updatedStoreAdmins);
     }
 
-
-}
     public void navigateToPage(String pageName) {
         WebDriverWait wait = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(10));
 
@@ -206,7 +204,5 @@ public class DashboardPage extends BasePage {
             pageLink.click();
         }
     }
-
-
-
 }
+
