@@ -13,7 +13,7 @@ Feature: Admin Delete Store Functionality
 
 #TC_US21_002 – Validate store is removed upon confirmation
   @US21 @ValidDelete
-  Scenario: TC_US21_002 Validate store remains if deletion is canceled
+  Scenario: TC_US21_002 Validate store removed if deletion is confirmed
     When Admin navigates to the store list
     And Admin clicks delete
     And Admin confirms deletion
