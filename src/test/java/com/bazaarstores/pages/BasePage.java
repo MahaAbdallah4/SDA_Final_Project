@@ -1,6 +1,7 @@
 package com.bazaarstores.pages;
 
 import com.bazaarstores.utilities.ConfigReader;
+import com.bazaarstores.utilities.Driver;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -11,23 +12,23 @@ import java.time.Duration;
 import java.util.List;
 
 public abstract class BasePage {
-    protected WebDriver driver;
+
     protected WebDriverWait wait;
     protected Actions actions;
 
-    public BasePage(WebDriver driver) {
-        this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(ConfigReader.getExplicitWait()));
-        this.actions = new Actions(driver);
+    public BasePage() {
+
+        this.wait = new WebDriverWait(Driver.getDriver(), Duration.ofSeconds(ConfigReader.getExplicitWait()));
+        this.actions = new Actions(Driver.getDriver());
     }
 
     // Helper method to find element
     protected WebElement findElement(By locator) {
-        return driver.findElement(locator);
+        return Driver.getDriver().findElement(locator);
     }
 
     protected List<WebElement> findElements(By locator) {
-        return driver.findElements(locator);
+        return Driver.getDriver().findElements(locator);
     }
 
     // Click Methods
@@ -37,7 +38,7 @@ public abstract class BasePage {
     }
 
     public void clickWithJS(By locator) {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
+        JavascriptExecutor js = (JavascriptExecutor) Driver.getDriver();
         js.executeScript("arguments[0].click();", findElement(locator));
     }
 
@@ -50,7 +51,7 @@ public abstract class BasePage {
     }
 
     public void sendKeysWithJS(By locator, String text) {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
+        JavascriptExecutor js = (JavascriptExecutor) Driver.getDriver();
         js.executeScript("arguments[0].value='" + text + "';", findElement(locator));
     }
 
@@ -160,79 +161,69 @@ public abstract class BasePage {
 
     // JavaScript Methods
     public void scrollToElement(By locator) {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
+        JavascriptExecutor js = (JavascriptExecutor) Driver.getDriver();
         js.executeScript("arguments[0].scrollIntoView(true);", findElement(locator));
     }
 
     public void scrollToBottom() {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
+        JavascriptExecutor js = (JavascriptExecutor) Driver.getDriver();
         js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
     }
 
     public void scrollToTop() {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
+        JavascriptExecutor js = (JavascriptExecutor) Driver.getDriver();
         js.executeScript("window.scrollTo(0, 0)");
     }
 
     // Alert Methods
     public void acceptAlert() {
         wait.until(ExpectedConditions.alertIsPresent());
-        driver.switchTo().alert().accept();
+        Driver.getDriver().switchTo().alert().accept();
     }
 
     public void dismissAlert() {
         wait.until(ExpectedConditions.alertIsPresent());
-        driver.switchTo().alert().dismiss();
+        Driver.getDriver().switchTo().alert().dismiss();
     }
 
     public String getAlertText() {
         wait.until(ExpectedConditions.alertIsPresent());
-        return driver.switchTo().alert().getText();
+        return Driver.getDriver().switchTo().alert().getText();
     }
 
     // Window Methods
     public void switchToWindow(int windowIndex) {
-        List<String> windows = driver.getWindowHandles().stream().toList();
-        driver.switchTo().window(windows.get(windowIndex));
+        List<String> windows = Driver.getDriver().getWindowHandles().stream().toList();
+        Driver.getDriver().switchTo().window(windows.get(windowIndex));
     }
 
     public void switchToFrame(By frameLocator) {
-        driver.switchTo().frame(findElement(frameLocator));
+        Driver.getDriver().switchTo().frame(findElement(frameLocator));
     }
 
     public void switchToDefaultContent() {
-        driver.switchTo().defaultContent();
+        Driver.getDriver().switchTo().defaultContent();
     }
 
     // Navigation Methods
     public void navigateToUrl(String url) {
-        driver.navigate().to(url);
+        Driver.getDriver().navigate().to(url);
     }
 
     public void refreshPage() {
-        driver.navigate().refresh();
+        Driver.getDriver().navigate().refresh();
     }
 
     public void navigateBack() {
-        driver.navigate().back();
+        Driver.getDriver().navigate().back();
     }
 
     public void navigateForward() {
-        driver.navigate().forward();
+        Driver.getDriver().navigate().forward();
     }
 
     // Screenshot Method
     public byte[] takeScreenshot() {
-        return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+        return ((TakesScreenshot) Driver.getDriver()).getScreenshotAs(OutputType.BYTES);
     }
-
-        // Custom wait method to pause for a few seconds
-        public void waitFor(int seconds) {
-            try {
-                Thread.sleep(seconds * 1000L);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                System.out.println("Wait interrupted: " + e.getMessage());
-            }
-        }
-    }
+}
