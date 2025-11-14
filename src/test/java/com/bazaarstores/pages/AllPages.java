@@ -1,6 +1,10 @@
 package com.bazaarstores.pages;
 
+import org.openqa.selenium.WebDriver;
+
 public class AllPages {
+
+    private WebDriver driver;
 
     private LoginPage loginPage;
     private RegistrationPage registrationPage;
@@ -8,6 +12,13 @@ public class AllPages {
     private UsersPage usersPage;
     private StoresPage storesPage;
     private BrowseProductPage productPage;
+    private AddProductPage addProductPage;
+    private EditProductsPage editProductsPage;
+    private DeleteProductPage deleteProductPage;
+    private UsersviewPage usersviewPage;
+
+
+
 
 
 
@@ -50,6 +61,30 @@ public class AllPages {
             productPage = new BrowseProductPage();
         }
         return productPage;
+    }
+    public AddProductPage getAddProductPage() {
+        if (addProductPage == null) {
+            addProductPage = new AddProductPage();
+        }
+        return addProductPage;
+    }
+    public EditProductsPage getEditProductsPage(){
+        if (editProductsPage == null){
+            editProductsPage = new EditProductsPage();
+        }
+        return editProductsPage;
+    }
+    public DeleteProductPage getDeleteProductPage() {
+        if (deleteProductPage == null) {
+            deleteProductPage = new DeleteProductPage();
+        }
+        return deleteProductPage;
+    }
+    public UsersviewPage getUsersviewPage(){
+   if (usersviewPage == null){
+       usersviewPage = new UsersviewPage();
+   }
+   return usersviewPage;
     }
 
 }

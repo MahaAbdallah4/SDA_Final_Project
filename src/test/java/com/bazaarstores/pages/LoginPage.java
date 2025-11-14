@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 
 public class LoginPage extends BasePage {
 
+
     // By Locators
     private final By emailInput = By.cssSelector("input[name='email'], input[type='email'], input[placeholder*='Email']");
     private final By passwordInput = By.cssSelector("input[name='password'], input[type='password']");

@@ -10,11 +10,16 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.util.List;
+import org.openqa.selenium.WebDriver;
+
 
 public abstract class BasePage {
 
     protected WebDriverWait wait;
     protected Actions actions;
+    protected WebDriver driver;
+
+
 
     public BasePage() {
 
@@ -56,7 +61,10 @@ public abstract class BasePage {
     }
 
     // Wait Methods
-    public void waitForElementToBeVisible(By locator) { wait.until(ExpectedConditions.visibilityOfElementLocated(locator)); }
+    public void waitForElementToBeVisible(By locator) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+
     public void waitForElementToBeClickable(By locator) {
         wait.until(ExpectedConditions.elementToBeClickable(locator));
     }
@@ -89,6 +97,7 @@ public abstract class BasePage {
         String validationMessage = getValidationMessage(locator);
         return validationMessage != null && !validationMessage.isEmpty();
     }
+
     public boolean isDisplayed(By locator) {
         try {
             waitForElementToBeVisible(locator);
@@ -193,6 +202,7 @@ public abstract class BasePage {
         List<String> windows = Driver.getDriver().getWindowHandles().stream().toList();
         Driver.getDriver().switchTo().window(windows.get(windowIndex));
     }
+
     // Type Methods
     public void clearAndType(By locator, String text) {
         waitForElementToBeVisible(locator);
@@ -236,10 +246,19 @@ public abstract class BasePage {
     public By byXpathContainsText(String text) {
         return By.xpath("//*[contains(normalize-space(text()),'" + text + "')]");
     }
+
     // Case-insensitive XPath
     public By byXpathContainsTextIgnoreCase(String text) {
         return By.xpath("//*[contains(translate(normalize-space(.),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'"
                 + text.toLowerCase() + "')]");
+    }
+    public void waitFor(int seconds) {
+        try {
+            Thread.sleep(seconds * 1000L);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            System.out.println("Wait interrupted: " + e.getMessage());
+        }
     }
 
 }
