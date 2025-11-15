@@ -6,6 +6,7 @@ import com.bazaarstores.pages.DashboardPage;
 import com.bazaarstores.utilities.ApiUtil;
 import com.bazaarstores.utilities.ConfigReader;
 import com.bazaarstores.utilities.Driver;
+import io.cucumber.java.PendingException;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -104,8 +105,9 @@ public class LoginSteps {
         allPages.getLoginPage().isValidationMessageDisplayed(field);
     }
 
-    @Given("user goes to homepage")
-    public void userGoesToHomepage() {
+
+    @Given("user will go to homepage")
+    public void userWillGoToHomepage() {
         Driver.getDriver().get(ConfigReader.getBaseUrl());
     }
 }

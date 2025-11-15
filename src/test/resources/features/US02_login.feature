@@ -2,7 +2,7 @@
 Feature: Login Functionality
 
   Background:
-    Given user goes to homepage
+    Given user will go to homepage
 
 #TC_US02_001-Verify successful login with valid credentials (Existing Accounts)
   @Smoke @Customer
