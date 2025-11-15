@@ -17,15 +17,16 @@ public class ProductsStep {
 
     AllPages pages = new AllPages();
 
-    @Given("user is logged in as a customer")
-    public void userIsLoggedInAsACustomer() {
-        Driver.getDriver().get(ConfigReader.getBaseUrl());
-        pages.getLoginPage()
-                .enterEmail(ConfigReader.getCustomerEmail())
-                .enterPassword(ConfigReader.getDefaultPassword())
-                .clickLoginButton();
-
-    }
+    //this step is duplicated in another step definition class
+//    @Given("user is logged in as a customer")
+//    public void userIsLoggedInAsACustomer() {
+//        Driver.getDriver().get(ConfigReader.getBaseUrl());
+//        pages.getLoginPage()
+//                .enterEmail(ConfigReader.getCustomerEmail())
+//                .enterPassword(ConfigReader.getDefaultPassword())
+//                .clickLoginButton();
+//
+//    }
 
     @When("user navigates to the customer page")
     public void userNavigatesToTheCustomerPage() {
