@@ -2,9 +2,11 @@ package com.bazaarstores.stepDefinitions;
 
 import com.bazaarstores.pages.AllPages;
 import com.bazaarstores.utilities.ConfigReader;
+import com.bazaarstores.utilities.Driver;
 import com.github.javafaker.Faker;
 import io.cucumber.java.PendingException;
 import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
@@ -91,5 +93,10 @@ public class RegistrationSteps {
     @Then("user should see: The password field confirmation does not match. error message")
     public void userShouldSeeThePasswordFieldConfirmationDoesNotMatchErrorMessage() {
         pages.getRegistrationPage().validatePasswordNotMatch();
+    }
+
+    @Given("user goes to homepage")
+    public void userGoesToHomepage() {
+        Driver.getDriver().get(ConfigReader.getBaseUrl());
     }
 }
