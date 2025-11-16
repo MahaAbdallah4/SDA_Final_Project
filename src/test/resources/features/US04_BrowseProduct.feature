@@ -1,4 +1,4 @@
-@US04
+@Smoke @US04
 Feature: Customer Product Page
 
   Background:

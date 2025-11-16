@@ -1,4 +1,4 @@
-@AdminDeleteStoreFeature
+@Smoke @AdminDeleteStoreFeature
 Feature: Admin Delete Store Functionality
 
   Background:

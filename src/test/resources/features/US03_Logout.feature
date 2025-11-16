@@ -1,4 +1,4 @@
-@Logout
+@Smoke @Logout
   Feature:Logout Feature
     Background:
       Given user is logged in
