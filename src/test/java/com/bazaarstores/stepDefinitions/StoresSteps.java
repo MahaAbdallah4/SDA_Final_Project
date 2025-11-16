@@ -6,7 +6,7 @@ import com.bazaarstores.utilities.ConfigReader;
 import com.bazaarstores.utilities.Driver;
 import io.cucumber.java.en.*;
 import io.restassured.response.Response;
-import org.testng.Assert;
+import org.junit.Assert;
 import java.util.List;
 
 public class StoresSteps {
@@ -34,7 +34,7 @@ public class StoresSteps {
     @Then("all stores should be displayed correctly on the page")
     public void all_stores_should_be_displayed_correctly_on_the_page() {
         uiStores = pages.getStoresPage().getStoreNames();
-        Assert.assertFalse(uiStores.isEmpty(), "No stores displayed on UI!");
+        Assert.assertFalse( "No stores displayed on UI!",uiStores.isEmpty());
     }
 
     @Then("each store should show correct {string}, {string}, and {string}")
@@ -67,6 +67,6 @@ public class StoresSteps {
 
     @Then("the API response should match the UI store data")
     public void the_api_response_should_match_the_ui_store_data() {
-        Assert.assertEquals(apiStores, uiStores, "UI and API store data do not match!");
+        Assert.assertEquals("UI and API store data do not match!", apiStores, uiStores);
     }
 }

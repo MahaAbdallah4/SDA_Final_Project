@@ -3,7 +3,7 @@ package com.bazaarstores.pages;
 import com.bazaarstores.utilities.Driver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.testng.Assert;
+import org.junit.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,9 +37,9 @@ public class StoresPage extends BasePage {
             String id = row.findElement(By.xpath("./td[1]")).getText().trim();
             String name = row.findElement(By.xpath("./td[2]")).getText().trim();
             String location = row.findElement(By.xpath("./td[3]")).getText().trim();
-            Assert.assertFalse(id.isEmpty(), "Missing Store ID");
-            Assert.assertFalse(name.isEmpty(), "Missing Store Name");
-            Assert.assertFalse(location.isEmpty(), "Missing Store Location");
+            Assert.assertFalse( "Missing Store ID",id.isEmpty());
+            Assert.assertFalse( "Missing Store Name",name.isEmpty());
+            Assert.assertFalse( "Missing Store Location",location.isEmpty());
         }
     }
 }
