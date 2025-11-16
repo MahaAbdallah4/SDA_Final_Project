@@ -171,6 +171,13 @@
             </plugin>
 
         </plugins>
+
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+        </testResources>
+
     </build>
 
     <!-- Optional: Maven Profiles for different test suites -->
