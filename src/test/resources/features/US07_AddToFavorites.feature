@@ -13,11 +13,11 @@ Feature: US07 - Favorites functionality
 
   @UI
   Scenario: TC07-02 Validate removing from favorites
-  Given user clicks the heart icon on the product "Jeans"
+  Given user clicks the heart icon on the product "E-Book Reader"
     When user goes to "My Favorites"
     And clicks the heart icon again on product "Jeans"
-    And product "Jeans" should be removed from favorites
-    Then the product "Jeans" should no longer appear in My Favorites
+    And product "E-Book Reader" should be removed from favorites
+    Then the product "E-Book Reader" should no longer appear in My Favorites
 
 
   @API
@@ -25,4 +25,4 @@ Feature: US07 - Favorites functionality
     Given the API endpoint "/favorites" is active
     When user sends GET request for user ID 355
     Then the added product "Flower" should appear in the API response
-    And removal of the product "Jeans" should update the favorites list correctly for user ID 49
+    And removal of the product "E-Book Reader" should update the favorites list correctly for user ID 49

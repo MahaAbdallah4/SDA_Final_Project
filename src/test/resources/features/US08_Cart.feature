@@ -15,13 +15,13 @@ Feature: US08 - Cart functionality
   @UI
   Scenario: TC08-02 Validate cart contents and total price
     Given the user has added multiple products including
-      | Flower |
-      | Jeans  |
+      | Flower        |
+      | E-Book Reader |
 
     Then all added products should appear with correct prices
-      | Product Name | Price   |
-      | Flower       | $400.00 |
-      | Jeans        | $400.00 |
+      | Product Name  | Price   |
+      | Flower        | $8.00 |
+      | E-Book Reader | $300.00 |
 
 
     And the total price should be accurate

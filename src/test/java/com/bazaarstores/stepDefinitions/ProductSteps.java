@@ -18,11 +18,9 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.text.NumberFormat;
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static io.restassured.RestAssured.given;
@@ -38,6 +36,7 @@ public class ProductSteps {
 
 
     //UI
+
 
     @Given("user is logged in as a customer")
     public void user_is_logged_in_as_a_customer() {
@@ -440,7 +439,9 @@ public class ProductSteps {
             expectedTotal += Double.parseDouble(priceText);
         }
 
-        String expectedTotalStr = "$" + String.format("%.2f", expectedTotal);
+        NumberFormat formatter = NumberFormat.getCurrencyInstance(Locale.US);
+        String expectedTotalStr = formatter.format(expectedTotal);
+
 
         Assert.assertEquals("Cart total is invalid or missing!", expectedTotalStr, subtotalText);
     }
