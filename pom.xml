@@ -84,140 +84,28 @@
 
     <build>
         <plugins>
-            <!-- Maven Compiler Plugin - Java 21 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.14.0</version>
-                <configuration>
-                    <release>21</release>
-                </configuration>
-            </plugin>
-
-            <!-- Maven Surefire Plugin - Parallel Execution -->
+            <!-- Surefire plugin used to run tests in parallel -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.5.4</version>
+                <version>3.0.0-M1</version>
                 <configuration>
-                    <!-- Parallel execution at scenario/method level -->
-                    <parallel>methods</parallel>
-                    <threadCount>${threadCount}</threadCount>
-                    <perCoreThreadCount>true</perCoreThreadCount>
-
-                    <!-- Fork settings for isolated test execution -->
-                    <!--                    <forkCount>2</forkCount>-->
-                    <!--                    <reuseForks>false</reuseForks>-->
-
-                    <!-- JVM arguments for test execution -->
-                    <argLine>
-                        -Duser.language=en
-                        -Xmx1024m
-                        -Dfile.encoding=UTF-8
-                    </argLine>
-
-                    <!-- Test output configuration -->
+                    <!--                    <parallel>methods</parallel>-->
+                    <!--                    <forkMode>perthread</forkMode>-->
+                    <!--                    <threadCount>3</threadCount>-->
+                    <reuseForks>false</reuseForks>
+                    <argLine>-Duser.language=en</argLine>
+                    <argLine>-Xmx1024m</argLine>
+                    <argLine>-XX:MaxPermSize=256m</argLine>
+                    <argLine>-Dfile.encoding=UTF-8</argLine>
                     <useFile>false</useFile>
-
-                    <!-- Include all Runner classes -->
                     <includes>
                         <include>TestRunner.java</include>
                     </includes>
-
-                    <!-- Continue execution even if tests fail - good for learning -->
-                    <testFailureIgnore>${testFailureIgnore}</testFailureIgnore>
-
-                    <!-- System properties passed to tests
-                         Usage examples:
-                         - mvn clean test (uses defaults)
-                         - mvn clean test -Dtest=SmokeRunner
-                         - mvn clean test -Dbrowser=firefox -Dtags=@Regression
-                         - mvn clean test -DthreadCount=5
-                         - mvn clean test -DtestFailureIgnore=false
-                    -->
-                    <systemPropertyVariables>
-                        <browser>${browser}</browser>
-                        <cucumber.filter.tags>${tags}</cucumber.filter.tags>
-                    </systemPropertyVariables>
+                    <testFailureIgnore>true</testFailureIgnore>
                 </configuration>
             </plugin>
-
-            <!-- Cucumber Reporting Plugin - Generates beautiful HTML reports -->
-            <plugin>
-                <groupId>net.masterthought</groupId>
-                <artifactId>maven-cucumber-reporting</artifactId>
-                <version>5.7.7</version>
-                <executions>
-                    <execution>
-                        <id>execution</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <projectName>Bazaar Stores Test Automation 2025</projectName>
-                            <skip>false</skip>
-                            <outputDirectory>${project.build.directory}/cucumber-reports</outputDirectory>
-                            <inputDirectory>${project.build.directory}/cucumber-reports</inputDirectory>
-                            <jsonFiles>
-                                <param>**/*.json</param>
-                            </jsonFiles>
-                            <mergeFeaturesById>false</mergeFeaturesById>
-                            <mergeFeaturesWithRetest>false</mergeFeaturesWithRetest>
-                            <checkBuildResult>false</checkBuildResult>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
         </plugins>
-
-
     </build>
-
-    <!-- Optional: Maven Profiles for different test suites -->
-    <profiles>
-        <profile>
-            <id>smoke</id>
-            <properties>
-                <tags>@Smoke</tags>
-                <browser>chrome</browser>
-                <threadCount>3</threadCount>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>regression</id>
-            <properties>
-                <tags>@Regression</tags>
-                <browser>chrome</browser>
-                <threadCount>5</threadCount>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>customer</id>
-            <properties>
-                <tags>@Customer</tags>
-                <browser>firefox</browser>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>admin</id>
-            <properties>
-                <tags>@Admin</tags>
-                <browser>chrome</browser>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>parallel</id>
-            <properties>
-                <tags>@Regression</tags>
-                <threadCount>5</threadCount>
-            </properties>
-        </profile>
-    </profiles>
 
 </project>
