@@ -1,4 +1,4 @@
-@Smoke @Regression @Login
+ @Regression @Login
 Feature: Login Functionality
 
   Background:
@@ -12,14 +12,14 @@ Feature: Login Functionality
     Then user should be logged in successfully
 
 #TC_US02_002-Verify successful login with valid credentials (New Accounts)
-  @Smoke
+
   Scenario: Successful login with valid credentials
     When user enters email "customer@sda.com" and password "Password.12345"
     And user clicks login button
     Then user should be logged in successfully
 
 #TC_US02_003-Verify error message with invalid credentials
-  @Negative
+  @Smoke @Negative
   Scenario: Login with invalid credentials
     When user enters email "invalid@test.com" and password "WrongPassword"
     And user clicks login button
@@ -27,7 +27,7 @@ Feature: Login Functionality
     And user should remain on login page
 
 #TC_US02_004-Verify validation for invalid email format
-  @Negative
+  @Smoke @Negative
   Scenario: Validation for invalid email format
     When user enters email "john.com" and password "Password.12345"
     And user clicks login button
@@ -40,20 +40,20 @@ Feature: Login Functionality
     When user logs in via API with valid credentials
     Then API should return success status code
 
-  @Admin
+  @Smoke @Admin
   Scenario: Successful login as Admin
     When user enters email "admin@sda.com" and password "Password.12345"
     And user clicks login button
     Then admin should be logged in successfully
 
-  @StoreManager
+  @Smoke  @StoreManager
   Scenario: Successful login as Store Manager
     When user enters email "storemanager@sda.com" and password "Password.12345"
     And user clicks login button
     Then admin should be logged in successfully
 
 #TC_US02_005-Verify validation for missing required fields
-  @Negative
+  @Smoke @Negative
   Scenario: Login with empty email
     When user enters email "" and password "Password.12345"
     And user clicks login button

@@ -5,7 +5,7 @@ Feature: US06 - Add to Cart functionality
   Background:
     Given user is logged in as a customer
 
-  @UI
+  @Smoke @UI
 
   Scenario: TC06-01 Validate “Add to Cart” functionality from UI
     When user clicks the "Add to Cart" button for product "E-Book Reader"

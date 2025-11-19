@@ -4,7 +4,7 @@ Feature: US10 - Product Catalog
   Background:
     Given the user is logged in as a Store Manager
 
-  @UI
+  @Smoke @UI
   Scenario: TC10-01 Validate catalog view for store manager
     When the user goes to the Menu and clicks Products
     Then all products should be displayed with correct name, stock, and price columns

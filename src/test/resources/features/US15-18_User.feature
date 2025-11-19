@@ -15,7 +15,7 @@ Feature: Admin manages users (Add, Edit, Delete)
     Then system should show success message "User created successfully"
     And the new user "emm@tesst.com" should appear in the user list
 
-  @NegativeAddUser
+   @NegativeAddUser
   Scenario: Add a new user as an Admin
     When admin navigates to "Users" page
     And admin clicks "Add User"
@@ -25,7 +25,7 @@ Feature: Admin manages users (Add, Edit, Delete)
     And admin submits the user form
     Then system should show invalid email error
 
-  @NegativeAddUser
+   @NegativeAddUser
   Scenario: Add a new user as an Admin
     When admin navigates to "Users" page
     And admin clicks "Add User"
