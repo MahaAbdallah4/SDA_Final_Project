@@ -1,4 +1,4 @@
-@Smoke @AdminEditStoreFeature
+ @AdminEditStoreFeature
 Feature: Update Store Details
   As an Admin,
   I want to update store details,
