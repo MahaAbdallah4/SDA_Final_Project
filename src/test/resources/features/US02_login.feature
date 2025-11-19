@@ -5,7 +5,7 @@ Feature: Login Functionality
     Given user will go to homepage
 
 #TC_US02_001-Verify successful login with valid credentials (Existing Accounts)
-  @Smoke @Customer
+   @Customer
   Scenario: Successful login with valid customer credentials from config
     When user enters valid customer credentials
     And user clicks login button

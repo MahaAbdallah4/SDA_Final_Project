@@ -4,7 +4,7 @@ Feature: Admin manages users (Add, Edit, Delete)
   Background:
     Given admin is logged in on the Dashboard
 
-  @AddUser @Smoke
+  @AddUser
   Scenario: Add a new user as an Admin
     When admin navigates to "Users" page
     And admin clicks "Add User"
